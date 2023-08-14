@@ -14,8 +14,15 @@ usersRouter.post('/', async (req, res) => {
     passwordHash
   })
 
-  const savedUser = await user.save()
-  res.status(201).json(savedUser)
+  try {
+    const savedUser = await user.save()
+    res.status(201).json(savedUser)
+  } catch (error) {
+    console.log('Failed to create user.')
+    res.status(404).end()
+  } 
+  // const savedUser = await user.save()
+  // res.status(201).json(savedUser)
 })
 
 //GET route to retrieve specific user
