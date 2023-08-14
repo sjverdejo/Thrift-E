@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
-const User = require('../models/user')
+const User = require('../models/users')
 
 loginRouter.post('/', async (req, res) => {
   const { username, password } = req.body
@@ -15,6 +15,7 @@ loginRouter.post('/', async (req, res) => {
 
   //if invalid set status accordingly and send 401
   if (!(user && validPassword)) {
+    console.log('Invalid login.')
     return res.status(401).json({
       status: 'invalid'
     })
@@ -24,6 +25,8 @@ loginRouter.post('/', async (req, res) => {
   res
     .status(200)
     .json({status: 'valid'})
+  
+  console.log('Valid login')
 })
 
 module.exports = loginRouter
