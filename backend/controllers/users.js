@@ -22,11 +22,13 @@ usersRouter.post('/', async (req, res) => {
 usersRouter.get('/:username', async (req, res) => {
   const username = req.params.username
 
-  const user = await User.find({username: username})
+  const user = await User.findOne({ username: username })
 
   if (user) {
+    console.log('Successfully retrieved.')
     res.json(user)
   } else {
+    console.log('Failed to retrieve.')
     res.status(404).end()
   }
 })
