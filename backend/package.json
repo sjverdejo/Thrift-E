@@ -4,9 +4,9 @@
   "description": "Backend for app for buying and selling",
   "main": "index.js",
   "scripts": {
-    "start":"node index.js",
-    "dev": "nodemon index.js",
-    "test": ""
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "Samuel Verdejo",
   "license": "ISC",
@@ -14,7 +14,11 @@
     "bcrypt": "^5.1.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^7.4.2",
-    "nodemon": "^3.0.1"
+    "mongoose": "^7.4.2"
+  },
+  "devDependencies": {
+    "jest": "^29.6.2",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
   }
 }

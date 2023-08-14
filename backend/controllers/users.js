@@ -6,6 +6,11 @@ const User = require('../models/users')
 usersRouter.post('/', async (req, res) => {
   const { username, password } = req.body
 
+  if (password === '') {
+    console.log('Failed to create user due to no password.')
+    res.status(404).end()
+
+  }
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
@@ -17,12 +22,11 @@ usersRouter.post('/', async (req, res) => {
   try {
     const savedUser = await user.save()
     res.status(201).json(savedUser)
+    console.log('Successfully added user.')
   } catch (error) {
-    console.log('Failed to create user.')
+    console.log('Failed to create user due to no username.')
     res.status(404).end()
-  } 
-  // const savedUser = await user.save()
-  // res.status(201).json(savedUser)
+  }
 })
 
 //GET route to retrieve specific user
