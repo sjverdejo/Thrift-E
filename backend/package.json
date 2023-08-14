@@ -4,7 +4,9 @@
   "description": "Backend for app for buying and selling",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start":"node index.js",
+    "dev": "nodemon index.js",
+    "test": ""
   },
   "author": "Samuel Verdejo",
   "license": "ISC",

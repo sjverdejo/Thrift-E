@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
-const users = require('../models/users')
+const User = require('../models/users')
 
+//POST route to create a new user
 usersRouter.post('/', async (req, res) => {
   const { username, password } = req.body
 
@@ -15,6 +16,19 @@ usersRouter.post('/', async (req, res) => {
 
   const savedUser = await user.save()
   res.status(201).json(savedUser)
+})
+
+//GET route to retrieve specific user
+usersRouter.get('/:username', async (req, res) => {
+  const username = req.params.username
+
+  const user = await User.find({username: username})
+
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404).end()
+  }
 })
 
 module.exports = usersRouter
