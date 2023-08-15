@@ -78,9 +78,14 @@ itemsRouter.delete('/:id', async (req, res) => {
 
   //if unable to delete, 404 status. Otherwise delete item by Id from database
   try {
-    await Item.findByIdAndDelete(id)
-    res.status(200).send()
-    console.log('Deleted Successfully.')
+    const itemToDelete = await Item.findByIdAndDelete(id)
+    if (itemToDelete) {
+      res.status(200).send()
+      console.log('Deleted Successfully.')
+    } else {
+      console.log('No object to be deleted.npm')
+      res.status(404).end()
+    }
   } catch {
     console.log('Not found')
     res.status(404).end()

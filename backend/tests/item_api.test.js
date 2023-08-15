@@ -334,10 +334,76 @@ describe('PUT Route for Items', () => {
 })
 
 describe('DELETE Route for Items', () => {
-  
+  beforeEach(async () => {
+    //delete ALL User database and Item database 
+    await User.deleteMany()
+    await Item.deleteMany()
+
+    //Create a user for testing
+    const testUser = new User({
+      username: 'Test',
+      passwordHash: 'TestPW',
+    })
+
+    const user = await testUser.save()
+    const userId = user._id
+
+    const currentDate = new Date()
+
+    const testItem = new Item({
+      name: 'Green Shirt',
+      datePosted: currentDate,
+      price: '40',
+      clothingType: 'Shirt',
+      seller: userId
+    })
+
+    const testItem2 = new Item({
+      name: 'Blue Shirt',
+      datePosted: currentDate,
+      price: '20',
+      clothingType: 'Shirt',
+      seller: userId
+    })
+
+    await testItem.save()
+    await testItem2.save()
+  })
+
+  test('Deleting an item with valid id', async () => {
+    const items = await Item.find({}) // get all items
+    const item = await Item.findOne({}) //get first item in db
+    const id = item._id //id for item
+
+    await api
+      .delete(`/api/items/${id}`)
+      .expect(200)
+
+    const newItems = await Item.find({}) //get all items updated count
+    expect(newItems).toHaveLength(items.length - 1)
+
+  })
+
+  test('Deleting an item with invalid id', async () => {
+    const id = 'INVALID'
+
+    await api
+      .delete(`/api/items/${id}`)
+      .expect(404)
+  })
+
+  test('Deleting an item that was deleted already', async () => {
+    const item = await Item.findOne({})
+    await Item.findByIdAndDelete(item._id)
+
+    await api
+      .delete(`/api/items/${item._id}`)
+      .expect(404)
+  })
 })
 
-
 afterAll(async () => {
+  await User.deleteMany()
+  await Item.deleteMany()
   await mongoose.connection.close()
 })
