@@ -117,7 +117,5 @@ describe('GET routes for User database', () => {
 })
 
 afterAll(async ()=> {
-  //clear database
-  await User.deleteMany({})
   await mongoose.connection.close()
 })

@@ -13,13 +13,11 @@ itemsRouter.get('/', async (req, res) => {
 itemsRouter.get('/:id', async (req, res) => {
   const id = req.params.id
 
-  const item = await Item.findById(id)
-
-  //if item exists, return otherwise send 404
-  if (item) {
+  try {
+    const item = await Item.findById(id)
     console.log('Successfully retrieved one item')
     res.json(item)
-  } else {
+  } catch (error) {
     console.log('Item not found.')
     res.status(404).end()
   }
