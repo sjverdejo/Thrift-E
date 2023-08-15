@@ -24,7 +24,7 @@ usersRouter.post('/', async (req, res) => {
     res.status(201).json(savedUser)
     console.log('Successfully added user.')
   } catch (error) {
-    console.log('Failed to create user due to no username.')
+    console.log('Failed to create user due to no username/non unique.')
     res.status(404).end()
   }
 })

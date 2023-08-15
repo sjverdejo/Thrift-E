@@ -59,13 +59,25 @@ describe('POST routes for User database, one user in DB initially', () => {
   //Test if missing password field
   test('Missing password for new user', async () => {
     const newUser = {
-      username: 'test',
+      username: 'test2',
       password: ''
     }
 
     await api
       .post('/api/users')
       .send(newUser)
+      .expect(404)
+  })
+
+  test('Username not unique for new user', async () => {
+    const sameUsername = {
+      username: 'test',
+      password: 'testing2'
+    }
+
+    await api
+      .post('/api/users')
+      .send(sameUsername)
       .expect(404)
   })
 })

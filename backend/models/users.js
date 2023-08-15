@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 //Model Schema for User
 const userSchema = new mongoose.Schema({
@@ -17,6 +18,8 @@ const userSchema = new mongoose.Schema({
     }
   ],
 })
+
+userSchema.plugin(uniqueValidator) //add plugin to make username unique
 
 const User = mongoose.model('User', userSchema)
 
