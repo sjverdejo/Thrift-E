@@ -56,15 +56,20 @@ itemsRouter.put('/:id', async (req, res) => {
   const { name, price, clothingType } = req.body
   const id = req.params.id
 
-  //if success, update item info. If failed, send 404 status
-  try {
-    const updated = await Item.findByIdAndUpdate(id, { name, price, clothingType }, { new: true })
-    res.status(200).json(updated)
-    console.log('Updated successfully')
-  } catch(error) {
-    console.log('Failed to update')
-    res.status(404).end()
+  if (name && price && clothingType) {
+    try {
+      const updated = await Item.findByIdAndUpdate(id, { name, price, clothingType }, { new: true })
+      res.status(200).json(updated)
+      console.log('Updated successfully')
+    } catch(error) {
+      console.log('Failed to update')
+      res.status(404).end()
+    }
+  } else {
+    console.log('Failed to update missing name or price or clothingType')
+      res.status(404).end()
   }
+  //if success, update item info. If failed, send 404 status
 })
 
 //DELETE route
