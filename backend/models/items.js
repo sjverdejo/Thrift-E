@@ -21,7 +21,8 @@ const itemSchema = new mongoose.Schema({
 
   seller: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'users',
+    required: true
   }
 })
 
