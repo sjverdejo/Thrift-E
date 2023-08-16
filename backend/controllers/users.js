@@ -44,14 +44,18 @@ usersRouter.post('/', async (req, res) => {
 usersRouter.get('/:username', async (req, res) => {
   const username = req.params.username
 
-  const user = await User.findOne({ username: username })
+  if (req.session.authenticated) {
+    const user = await User.findOne({ username: username })
 
-  if (user) {
-    console.log('Successfully retrieved.')
-    res.json(user)
+    if (user) {
+      console.log('Successfully retrieved.')
+      res.json(user)
+    } else {
+      console.log('Failed to retrieve.')
+      res.status(404).end()
+    }
   } else {
-    console.log('Failed to retrieve.')
-    res.status(404).end()
+    res.status(401).json({ message: 'Not Authenticated.'})
   }
 })
 
