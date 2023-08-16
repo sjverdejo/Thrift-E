@@ -2,6 +2,17 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/users')
 
+//Just for testing
+usersRouter.get('/', async (req, res) => {
+  if (req.session.authenticated) {
+    const users = await User.find({}).populate({path: 'items'})
+
+    res.json(users)
+  } else {
+    res.json({message:'Cant do it boss'})
+  }
+})
+
 //POST route to create a new user
 usersRouter.post('/', async (req, res) => {
   const { username, password } = req.body

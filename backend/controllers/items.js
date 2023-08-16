@@ -1,5 +1,6 @@
 const itemsRouter = require('express').Router()
 const Item = require('../models/items')
+const User = require('../models/users')
 
 //GET routes
 itemsRouter.get('/', async (req, res) => {
@@ -24,10 +25,16 @@ itemsRouter.get('/:id', async (req, res) => {
 })
 
 //POST routes
+//CREATE COMMENTS FOR THIS ONE
 itemsRouter.post('/', async (req, res) => {
-  const { name, price, clothingType, seller } = req.body
+  const { name, price, clothingType } = req.body
   const datePosted = new Date()
 
+  const seller = req.session.user
+  
+  const user = await User.findById(seller)
+
+  console.log('Seller', user)
   //seller temporary
   //create new item to send
   const item = new Item({
@@ -41,6 +48,9 @@ itemsRouter.post('/', async (req, res) => {
   //if creation successful, save to database otherwise send 404 error
   try {
     const newItem = await item.save()
+    user.items = user.items.concat(newItem._id)
+    await user.save()
+    console.log('Items:', user.items)
     res.status(201).send(newItem)
     console.log('Completed new item')
     //concat item to user items array

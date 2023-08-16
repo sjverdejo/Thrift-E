@@ -5,6 +5,7 @@ const app = require('../app')
 const api = supertest(app)
 const User = require('../models/users')
 
+///FIX ALL TESTS SINCE ADDED AUTH
 describe('Testing Logging in', () => {
   beforeEach( async () => {
     //clear database
@@ -40,7 +41,7 @@ describe('Testing Logging in', () => {
 
   test('Login with wrong password or username', async () => {
     const login = {
-      username: 'wrong',
+      username: '',
       password: 'wrong'
     }
 
