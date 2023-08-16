@@ -10,7 +10,7 @@ const itemSchema = new mongoose.Schema({
     required: true
   },
   price: {
-    type: String, //change to number
+    type: Number,
     required: true
   },
   clothingType: {

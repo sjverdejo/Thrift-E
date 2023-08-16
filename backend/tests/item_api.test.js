@@ -169,6 +169,23 @@ describe('POST Route for Items', () => {
       .expect(404)
   })
 
+  test('Test when non number for price given', async () => {
+    const user = await User.findOne({}) //Retreive user
+    const userId = user._id
+
+    const newItem = {
+      name: 'Red Shirt',
+      price: 'Number',
+      clothingType: 'Shirt',
+      seller: userId
+    }
+
+    await api
+      .post('/api/items')
+      .send(newItem)
+      .expect(404)
+  })
+
   test('Test missing clothingType when creating', async () => {
     const user = await User.findOne({}) //Retreive user
     const userId = user._id
@@ -310,7 +327,7 @@ describe('PUT Route for Items', () => {
       .expect(404)
     
     const checkItem = await Item.findOne({}) //retrieve item to be updated to ensure not changed
-    expect(checkItem.price).toContain(item.price) //check change
+    expect(checkItem.price).toEqual(item.price) //check change
   })
 
   test('Updating an Item with a missing clothing type', async () => {
