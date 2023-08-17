@@ -12,11 +12,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  dateCreated: {
+    type: Date,
+    required: true
+  },
   items: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Item'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Item'
     }
   ],
+  cart: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Item'
+  }]
 })
 
 userSchema.plugin(uniqueValidator) //add plugin to make username unique
