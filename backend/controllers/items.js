@@ -11,7 +11,7 @@ itemsRouter.get('/', async (req, res) => {
     console.log('Get all items.')
     res.json(items)
   } else {
-    res.status(401).json({ message: 'Not Authenticated' })
+    res.status(401).json({ message: 'Not Authenticated.' })
   }
 })
 
@@ -22,14 +22,14 @@ itemsRouter.get('/:id', async (req, res) => {
   if (req.session.authenticated) {
     try {
       const item = await Item.findById(id)
-      console.log('Successfully retrieved one item')
+      console.log('Successfully retrieved one item.')
       res.json(item)
     } catch (error) {
       console.log('Item not found.')
-      res.status(404).end()
+      res.status(404).json({ message: 'Not found.' })
     } 
   } else {
-    res.status(401).json({ message: 'Not Authenticated' })
+    res.status(401).json({ message: 'Not Authenticated.' })
   }
 })
 
@@ -62,14 +62,14 @@ itemsRouter.post('/', async (req, res) => {
       await user.save()
       console.log('Items:', user.items)
       res.status(201).send(newItem)
-      console.log('Completed new item')
+      console.log('Completed new item.')
       //concat item to user items array
     } catch (error) {
       console.log('Error adding new item.')
-      res.status(404).end()
+      res.status(404).json({ message: 'Error Adding.' })
     }
   } else {
-    res.status(401).json({ message: 'Not Authenticated' })
+    res.status(401).json({ message: 'Not Authenticated.' })
   }
 })
 
@@ -84,17 +84,17 @@ itemsRouter.put('/:id', async (req, res) => {
       try {
         const updated = await Item.findByIdAndUpdate(id, { name, price, clothingType }, { new: true })
         res.status(200).json(updated)
-        console.log('Updated successfully')
+        console.log('Updated successfully.')
       } catch(error) {
-        console.log('Failed to update')
-        res.status(404).end()
+        console.log('Failed to update.')
+        res.status(404).json({ message: 'Failed to update.' })
       }
     } else {
-      console.log('Failed to update missing name or price or clothingType')
-        res.status(404).end()
+      console.log('Failed to update missing name or price or clothingType.')
+        res.status(404).json({ message: 'Failed to update.' })
     }
   } else {
-    res.status(401).json({ message: 'Not Authenticated' })
+    res.status(401).json({ message: 'Not Authenticated.' })
   }
 })
 
@@ -110,15 +110,15 @@ itemsRouter.delete('/:id', async (req, res) => {
         res.status(200).send()
         console.log('Deleted Successfully.')
       } else {
-        console.log('No object to be deleted.npm')
-        res.status(404).end()
+        console.log('No object to be deleted.')
+        res.status(404).json({ message: 'Delete unsuccessful.' })
       }
     } catch {
       console.log('Not found')
-      res.status(404).end()
+      res.status(404).json({ message: 'Not Found.' })
     }
   } else {
-    res.status(401).json({ message: 'Not Authenticated' })
+    res.status(401).json({ message: 'Not Authenticated.' })
   }
 })
 

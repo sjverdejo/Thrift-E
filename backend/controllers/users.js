@@ -16,10 +16,11 @@ usersRouter.get('/', async (req, res) => {
 //POST route to create a new user
 usersRouter.post('/', async (req, res) => {
   const { username, password } = req.body
+  const dateCreated = new Date()
 
   if (password === '') {
     console.log('Failed to create user due to no password.')
-    res.status(404).end()
+    res.status(404).json({ message: 'Failed to create due to invalid password.' })
 
   }
   const saltRounds = 10
@@ -27,7 +28,8 @@ usersRouter.post('/', async (req, res) => {
 
   const user = new User({
     username,
-    passwordHash
+    passwordHash,
+    dateCreated
   })
 
   try {
@@ -36,7 +38,7 @@ usersRouter.post('/', async (req, res) => {
     console.log('Successfully added user.')
   } catch (error) {
     console.log('Failed to create user due to no username/non unique.')
-    res.status(404).end()
+    res.status(404).json({ message: 'Failed to create due to invalid username.' })
   }
 })
 
@@ -52,7 +54,7 @@ usersRouter.get('/:username', async (req, res) => {
       res.json(user)
     } else {
       console.log('Failed to retrieve.')
-      res.status(404).end()
+      res.status(404).json({ message: 'Failed to retrieve.' })
     }
   } else {
     res.status(401).json({ message: 'Not Authenticated.'})

@@ -5,9 +5,9 @@ logoutRouter.delete('/', async (req, res) => {
     req.session.destroy((error) => {
       if (error) {
         console.log('Error logging out.')
-        res.json({ message: 'Error logging out.' })
+        res.status(401).json({ message: 'Error logging out.' })
       } else {
-        res.json({ message: 'Logout Successful.'})
+        res.status(200).json({ message: 'Logout Successful.'})
       }
     })
   } else {
