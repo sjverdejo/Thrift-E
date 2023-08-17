@@ -5,6 +5,8 @@ const app = express()
 const usersRouter = require('./controllers/users')
 const itemsRouter = require('./controllers/items')
 const loginRouter = require('./controllers/login')
+const logoutRouter = require('./controllers/logout')
+
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
@@ -21,7 +23,7 @@ app.use(express.json())
 
 app.use(
   session({
-    secret: 'some secret',
+    secret: config.SECRET,
     cookie: { maxAge : 30000 },
     saveUninitialized: false,
   })
@@ -30,5 +32,6 @@ app.use(
 app.use('/api/users', usersRouter)
 app.use('/api/items', itemsRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/logout', logoutRouter)
 
 module.exports = app
