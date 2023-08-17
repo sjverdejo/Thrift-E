@@ -24,6 +24,17 @@ const userSchema = new mongoose.Schema({
   cart: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item'
+  }],
+  transactions: [{
+    item: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Item'
+    },
+    buyer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    datePurchased: Date
   }]
 })
 
