@@ -1,21 +1,21 @@
 const itemsRouter = require('express').Router()
-const session = require('express-session')
 const Item = require('../models/items')
 const User = require('../models/users')
 
 //GET routes
+//GET all items if authenticated
 itemsRouter.get('/', async (req, res) => {
+  //Check if session is authenticated
   if (req.session.authenticated) {
     const items = await Item.find({})
-
     console.log('Get all items.')
-    res.json(items)
+    res.json(items) //respond with all items in database
   } else {
-    res.status(401).json({ message: 'Not Authenticated.' })
+    res.status(401).json({ message: 'Not Authenticated.' }) //not logged in
   }
 })
 
-//GET individual item
+//GET individual item if authenticated
 itemsRouter.get('/:id', async (req, res) => {
   const id = req.params.id
 
@@ -34,36 +34,32 @@ itemsRouter.get('/:id', async (req, res) => {
 })
 
 //POST routes
-//CREATE COMMENTS FOR THIS ONE
+//Creating a new item if authenticated with seller set to authenticated user
 itemsRouter.post('/', async (req, res) => {
   const { name, price, clothingType } = req.body
   const datePosted = new Date()
 
   if (req.session.authenticated) {
-    const seller = req.session.user
+    const seller = req.session.user //set seller to authenticated user
   
     const user = await User.findById(seller)
-  
-    console.log('Seller', user)
-    //seller temporary
     //create new item to send
     const item = new Item({
       name,
       datePosted,
       price,
       clothingType,
-      seller
+      seller,
+      isSold: false //set isSold to false since new item
     })
   
     //if creation successful, save to database otherwise send 404 error
     try {
       const newItem = await item.save()
-      user.items = user.items.concat(newItem._id)
-      await user.save()
-      console.log('Items:', user.items)
+      user.items = user.items.concat(newItem._id) //add item to users array of items
+      await user.save() //save user database with update
       res.status(201).send(newItem)
       console.log('Completed new item.')
-      //concat item to user items array
     } catch (error) {
       console.log('Error adding new item.')
       res.status(404).json({ message: 'Error Adding.' })
@@ -74,6 +70,7 @@ itemsRouter.post('/', async (req, res) => {
 })
 
 //PUT route
+//Updating item if user authenticated matches seller and item not sold
 itemsRouter.put('/:id', async (req, res) => {
   //only change these 3 fields
   const { name, price, clothingType } = req.body
@@ -82,9 +79,15 @@ itemsRouter.put('/:id', async (req, res) => {
   if (req.session.authenticated) {
     if (name && price && clothingType) {
       try {
-        const updated = await Item.findByIdAndUpdate(id, { name, price, clothingType }, { new: true })
-        res.status(200).json(updated)
-        console.log('Updated successfully.')
+        const item = await Item.findById(id)
+        if ((item.seller.toString() === req.session.user) && !item.sold) { //if seller is authenticated user and item is not sold yet
+          const updated = await Item.findByIdAndUpdate(id, { name, price, clothingType }, { new: true })
+          res.status(200).json(updated)
+          console.log(item.seller, 'Updated successfully.')
+        } else {
+          console.log('Failed to update.')
+          res.status(404).json({ message: 'Failed to update.' })
+        }
       } catch(error) {
         console.log('Failed to update.')
         res.status(404).json({ message: 'Failed to update.' })
@@ -99,6 +102,7 @@ itemsRouter.put('/:id', async (req, res) => {
 })
 
 //DELETE route
+//Delete item only if seller owns it, authenticated, not sold \\ sold and authenticated
 itemsRouter.delete('/:id', async (req, res) => {
   const id = req.params.id
 
@@ -106,11 +110,12 @@ itemsRouter.delete('/:id', async (req, res) => {
   if (req.session.authenticated) {
     try {
       const itemToDelete = await Item.findByIdAndDelete(id)
-      if (itemToDelete) {
-        res.status(200).send()
+      if ((itemToDelete && (itemToDelete.seller.toString() === req.session.user) && !itemToDelete.sold)) { //check if item exists, matches seller and is not sold
+        //ADD extra if condition the user is buyer + sold
+        res.status(200).send(itemToDelete)
         console.log('Deleted Successfully.')
       } else {
-        console.log('No object to be deleted.')
+        console.log('Unsuccessful deletion.')
         res.status(404).json({ message: 'Delete unsuccessful.' })
       }
     } catch {

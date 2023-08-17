@@ -5,6 +5,8 @@ const api = supertest(app)
 const Item = require('../models/items')
 const User = require('../models/users')
 
+//CHANGE EVERYTHING TO INCLUDE AUTHENTICATION
+
 describe('GET Routes for Items', () => {
   beforeEach(async () => {
     //delete ALL User database and Item database 

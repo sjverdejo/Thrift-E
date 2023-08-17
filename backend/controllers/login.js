@@ -2,18 +2,19 @@ const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/users')
 
-//CREATE COMMENTS FOR THIS ONE
+//POST Route
+//Logging into the application
 loginRouter.post('/', async (req, res) => {
   const { username, password } = req.body
 
-  if (!req.session.authenticated) {
-    if (username && password) { 
-      const user = await User.findOne({ username })
-      const validPassword = user === null
+  if (!req.session.authenticated) { //if not already authenticated
+    if (username && password) { //if username and password exists
+      const user = await User.findOne({ username }) //find the user with matching username in database
+      const validPassword = user === null //if user exists, compare password to req.body password
       ? false
       : await bcrypt.compare(password, user.passwordHash)
   
-      if (user && validPassword) {
+      if (user && validPassword) { //authenticate session if valid and set user to id of user
         req.session.authenticated = true
         req.session.user = user._id
         res.json({ message: 'Valid login.' })
