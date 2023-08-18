@@ -40,7 +40,7 @@ transactionRouter.post('/:id', async (req, res) => {
         buyer.transactions = buyer.transactions.concat(transaction)
         await buyer.save()
 
-        item.isSold = true
+        item.isSold = true //set item to sold
         await item.save()
 
         res.status(200).json(transaction)
