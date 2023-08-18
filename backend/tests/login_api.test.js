@@ -55,6 +55,8 @@ describe('Testing Logging in', () => {
   })
 })
 
+// TEST IF LOGGINS IN ALREADY
+
 
 afterAll(async ()=> {
   //clear database

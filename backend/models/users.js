@@ -21,17 +21,17 @@ const userSchema = new mongoose.Schema({
     ref: 'Item'
     }
   ],
-  transactions: [{
-    item: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Item'
-    },
-    buyer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    datePurchased: Date
-  }]
+
+  transactions : [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transaction'
+    }
+  ],
+  // transactions: [{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Transaction'
+  //   }
+  // ]
 })
 
 userSchema.plugin(uniqueValidator) //add plugin to make username unique

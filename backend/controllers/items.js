@@ -1,6 +1,6 @@
 const itemsRouter = require('express').Router()
-const Item = require('../models/items')
 const User = require('../models/users')
+const Item = require('../models/items')
 
 //GET routes
 //GET all items if authenticated
@@ -59,9 +59,8 @@ itemsRouter.post('/', async (req, res) => {
       user.items = user.items.concat(newItem._id) //add item to users array of items
       await user.save() //save user database with update
       res.status(201).send(newItem)
-      console.log('Completed new item.')
     } catch (error) {
-      console.log('Error adding new item.')
+      console.log(error)
       res.status(404).json({ message: 'Error Adding.' })
     }
   } else {
