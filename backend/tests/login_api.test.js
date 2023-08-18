@@ -5,7 +5,7 @@ const app = require('../app')
 const api = supertest(app)
 const User = require('../models/users')
 
-///FIX ALL TESTS SINCE ADDED AUTH
+
 describe('Testing Logging in', () => {
   beforeEach( async () => {
     //clear database
@@ -19,10 +19,13 @@ describe('Testing Logging in', () => {
     //create a new user and save to test db
     const user = new User({
       username: 'test',
-      passwordHash
+      passwordHash,
+      dateCreated: new Date()
     })
 
     await user.save()
+
+    
   })
 
   test('Login with valid credentials', async () => {
@@ -36,7 +39,7 @@ describe('Testing Logging in', () => {
       .send(login)
       .expect(200)
 
-    expect(result.body.status).toEqual('valid')
+    expect(result.body.message).toEqual('Valid login.')
   })
 
   test('Login with wrong password or username', async () => {

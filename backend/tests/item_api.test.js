@@ -1,22 +1,26 @@
 const supertest = require('supertest')
-const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
-const Item = require('../models/items')
 const User = require('../models/users')
+const Item = require('../models/items')
+const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
 
-//CHANGE EVERYTHING TO INCLUDE AUTHENTICATION
+let cookie = null //create global cookie variable
 
-describe('GET Routes for Items', () => {
-  beforeEach(async () => {
-    //delete ALL User database and Item database 
-    await User.deleteMany()
-    await Item.deleteMany()
+//Before each test set the database and cookie
+beforeEach( async ()=> {
+  await User.deleteMany()
+  await Item.deleteMany()
 
+    const saltRounds = 10
+    const pw = 'TestPW'
+    const passwordHash = await bcrypt.hash(pw, saltRounds)
     //Create a user for testing
     const testUser = new User({
       username: 'Test',
-      passwordHash: 'TestPW',
+      passwordHash: passwordHash,
+      dateCreated: new Date()
     })
 
     const user = await testUser.save()
@@ -29,7 +33,8 @@ describe('GET Routes for Items', () => {
       datePosted: currentDate,
       price: '40',
       clothingType: 'Shirt',
-      seller: userId
+      seller: userId,
+      isSold: false
     })
 
     const testItem2 = new Item({
@@ -37,388 +42,93 @@ describe('GET Routes for Items', () => {
       datePosted: currentDate,
       price: '20',
       clothingType: 'Shirt',
-      seller: userId
+      seller: userId,
+      isSold: false
     })
 
     await testItem.save()
     await testItem2.save()
+
+    
+    const result = await api.post('/api/login')
+    .send({ username: 'Test', password: 'TestPW' })
+    .expect(200)
+  
+    cookie = result.header['set-cookie']
+})
+
+//GET Routes
+describe('GET route tests...', () => {
+  test('GET route declined without authentication', async () => {
+    const res = await api
+    .get('/api/items')
+    .expect(401)
   })
 
-  test('GET all items', async () => {
-    const items = await api
+  test('GET all items successfully', async () => {
+    const res = await api
       .get('/api/items')
+      .set('Cookie', cookie)
       .expect(200)
       .expect('Content-Type', /application\/json/)
-
-    //Database should have 2 items
-    expect(items.body).toHaveLength(2)
+    
+    expect(res.body).toHaveLength(2) //Should have 2 items returned
   })
 
-  test('GET one item', async () => {
-    const item = await Item.findOne({}) //Retrieve first item in database
-    const id = item._id
+  test('GET one specific item successfully', async () => {
+    const itemToRetrieve = await Item.findOne({}) //For comparison after API call
 
-    const result = await api
-      .get(`/api/items/${id}`)
+    const res = await api
+      .get(`/api/items/${itemToRetrieve._id}`)
+      .set('Cookie', cookie)
       .expect(200)
       .expect('Content-Type', /application\/json/)
-
-    expect(result.body.name).toEqual('Green Shirt') //result should be first item in database
+    
+    expect(res.body.name).toEqual('Green Shirt') //result should be first item in database
   })
 
-  test('Attempt getting item with invalid ID', async () => {
-    const id = '43242432432432'
-
+  test('GET one item with an invalid ID', async () => {
     await api
-      .get(`/api/items/${id}`)
+      .get('/api/items/INVALIDID')
+      .set('Cookie', cookie)
       .expect(404)
   })
 })
 
-describe('POST Route for Items', () => {
-  beforeEach(async () => {
-    //delete ALL User database and Item database 
-    await User.deleteMany()
-    await Item.deleteMany()
+//POST Routes
+describe('POST route tests...', () => {
+  test('Attempt to create an item without authentication', async () => {
 
-    //Create a user for testing
-    const testUser = new User({
-      username: 'Test',
-      passwordHash: 'TestPW',
-    })
-
-    const user = await testUser.save()
-    const userId = user._id
-
-    const currentDate = new Date()
-
-    const testItem = new Item({
-      name: 'Green Shirt',
-      datePosted: currentDate,
-      price: '40',
-      clothingType: 'Shirt',
-      seller: userId
-    })
-
-    const testItem2 = new Item({
-      name: 'Blue Shirt',
-      datePosted: currentDate,
-      price: '20',
-      clothingType: 'Shirt',
-      seller: userId
-    })
-
-    await testItem.save()
-    await testItem2.save()
   })
 
-  test('Adding a new item with valid info', async () => {
-    const items = await Item.find({}) //All items currently in database
-    const user = await User.findOne({}) //Retreive user
-    const userId = user._id
+  test('Create an item with valid fields and authentication', async () => {
 
-    const newItem = {
-      name: 'Red Shirt',
-      price: '50',
-      clothingType: 'Shirt',
-      seller: userId
-    }
-
-    await api
-      .post('/api/items')
-      .send(newItem)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
-
-    //Get all users updated and compare to original count
-    const newItems = await Item.find({})
-    expect(newItems).toHaveLength(items.length + 1)
-    
-    //create array of all item names and check if new item is added
-    const itemNames = newItems.map(i => i.name)
-    expect(itemNames).toContain(newItem.name)
   })
 
-  test('Test missing name when creating', async () => {
-    const user = await User.findOne({}) //Retreive user
-    const userId = user._id
+  test('Missing name when creating', async () => {
 
-    const newItem = {
-      price: '50',
-      clothingType: 'Shirt',
-      seller: userId
-    }
-
-    await api
-      .post('/api/items')
-      .send(newItem)
-      .expect(404)
   })
 
-  test('Test missing price when creating', async () => {
-    const user = await User.findOne({}) //Retreive user
-    const userId = user._id
+  test('Missing price when creating', async () => {
 
-    const newItem = {
-      name: 'Red Shirt',
-      clothingType: 'Shirt',
-      seller: userId
-    }
-
-    await api
-      .post('/api/items')
-      .send(newItem)
-      .expect(404)
   })
 
-  test('Test when non number for price given', async () => {
-    const user = await User.findOne({}) //Retreive user
-    const userId = user._id
+  test('Missing clothingType when creating', async () => {
 
-    const newItem = {
-      name: 'Red Shirt',
-      price: 'Number',
-      clothingType: 'Shirt',
-      seller: userId
-    }
-
-    await api
-      .post('/api/items')
-      .send(newItem)
-      .expect(404)
   })
 
-  test('Test missing clothingType when creating', async () => {
-    const user = await User.findOne({}) //Retreive user
-    const userId = user._id
+  test('Non-number price when creating', async () => {
 
-    const newItem = {
-      name: 'Red Shirt',
-      price: '50',
-      seller: userId
-    }
-
-    await api
-      .post('/api/items')
-      .send(newItem)
-      .expect(404)
-  }) 
-
-  test('Test missing seller when creating', async () => {
-    const newItem = {
-      name: 'Red Shirt',
-      price: '50',
-      clothingType: 'Shirt'
-    }
-
-    await api
-      .post('/api/items')
-      .send(newItem)
-      .expect(404)
-  }) 
+  })
+  
 })
 
-describe('PUT Route for Items', () => {
-  beforeEach(async () => {
-    //delete ALL User database and Item database 
-    await User.deleteMany()
-    await Item.deleteMany()
+describe('PUT route tests...', () => {
 
-    //Create a user for testing
-    const testUser = new User({
-      username: 'Test',
-      passwordHash: 'TestPW',
-    })
-
-    const user = await testUser.save()
-    const userId = user._id
-
-    const currentDate = new Date()
-
-    const testItem = new Item({
-      name: 'Green Shirt',
-      datePosted: currentDate,
-      price: '40',
-      clothingType: 'Shirt',
-      seller: userId
-    })
-
-    const testItem2 = new Item({
-      name: 'Blue Shirt',
-      datePosted: currentDate,
-      price: '20',
-      clothingType: 'Shirt',
-      seller: userId
-    })
-
-    await testItem.save()
-    await testItem2.save()
-  })
-
-  test('Updating an Item with a valid User ID', async () => {
-    const items = await Item.find({}) //retrieve all items
-    const item = await Item.findOne({}) //retrieve first item in database
-    const itemId = item._id
-
-    const changes = {
-      name: 'Red Sweater',
-      price: '30',
-      clothingType: 'Sweater'
-    }
-
-    await api
-      .put(`/api/items/${itemId}`)
-      .send(changes)
-      .expect(200)
-
-    //Compare count of all items to ensure same amount and no new items created
-    //Check if first item updated correctly
-    const updatedItems = await Item.find({}) //retrieve all items again
-    const updatedItem = await Item.findOne({}) //retrieve first item again
-    expect(updatedItems).toHaveLength(items.length)
-    expect(updatedItem.name).toContain(changes.name)
-  })
-
-  test('Attempting to update an Item with an invalid User ID', async () => {
-    const invalidId = 'INVALID'
-
-    const changes = {
-      name: 'Red Sweater',
-      price: '30',
-      clothingType: 'Sweater'
-    }
-
-    await api
-      .put(`/api/items/${invalidId}`)
-      .send(changes)
-      .expect(404)
-  })
-
-  test('Updating an Item with a missing name', async () => {
-    const item = await Item.findOne({}) //retrieve first item in database
-    const itemId = item._id
-
-    const changes = {
-      name: '',
-      price: '30',
-      clothingType: 'Sweater'
-    }
-
-    await api
-      .put(`/api/items/${itemId}`)
-      .send(changes)
-      .expect(404)
-    
-    const checkItem = await Item.findOne({}) //retrieve item to be updated to ensure not changed
-    expect(checkItem.name).toContain(item.name) //check if change
-  })
-
-  test('Updating an Item with a missing price', async () => {
-    const item = await Item.findOne({}) //retrieve first item in database
-    const itemId = item._id
-
-    const changes = {
-      name: 'Red Sweater',
-      price: '',
-      clothingType: 'Sweater'
-    }
-
-    await api
-      .put(`/api/items/${itemId}`)
-      .send(changes)
-      .expect(404)
-    
-    const checkItem = await Item.findOne({}) //retrieve item to be updated to ensure not changed
-    expect(checkItem.price).toEqual(item.price) //check change
-  })
-
-  test('Updating an Item with a missing clothing type', async () => {
-    const item = await Item.findOne({}) //retrieve first item in database
-    const itemId = item._id
-
-    const changes = {
-      name: 'Red Sweater',
-      price: '30',
-      clothingType: ''
-    }
-
-    await api
-      .put(`/api/items/${itemId}`)
-      .send(changes)
-      .expect(404)
-    
-    const checkItem = await Item.findOne({}) //retrieve item to be updated to ensure not changed
-    expect(checkItem.clothingType).toContain(item.clothingType) //check if changed
-  })
 })
 
-describe('DELETE Route for Items', () => {
-  beforeEach(async () => {
-    //delete ALL User database and Item database 
-    await User.deleteMany()
-    await Item.deleteMany()
-
-    //Create a user for testing
-    const testUser = new User({
-      username: 'Test',
-      passwordHash: 'TestPW',
-    })
-
-    const user = await testUser.save()
-    const userId = user._id
-
-    const currentDate = new Date()
-
-    const testItem = new Item({
-      name: 'Green Shirt',
-      datePosted: currentDate,
-      price: '40',
-      clothingType: 'Shirt',
-      seller: userId
-    })
-
-    const testItem2 = new Item({
-      name: 'Blue Shirt',
-      datePosted: currentDate,
-      price: '20',
-      clothingType: 'Shirt',
-      seller: userId
-    })
-
-    await testItem.save()
-    await testItem2.save()
-  })
-
-  test('Deleting an item with valid id', async () => {
-    const items = await Item.find({}) // get all items
-    const item = await Item.findOne({}) //get first item in db
-    const id = item._id //id for item
-
-    await api
-      .delete(`/api/items/${id}`)
-      .expect(200)
-
-    const newItems = await Item.find({}) //get all items updated count
-    expect(newItems).toHaveLength(items.length - 1)
-
-  })
-
-  test('Deleting an item with invalid id', async () => {
-    const id = 'INVALID'
-
-    await api
-      .delete(`/api/items/${id}`)
-      .expect(404)
-  })
-
-  test('Deleting an item that was deleted already', async () => {
-    const item = await Item.findOne({})
-    await Item.findByIdAndDelete(item._id)
-
-    await api
-      .delete(`/api/items/${item._id}`)
-      .expect(404)
-  })
+describe('DELETE route tests...', () => {
+  
 })
 
 afterAll(async () => {

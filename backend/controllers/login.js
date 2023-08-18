@@ -17,7 +17,7 @@ loginRouter.post('/', async (req, res) => {
       if (user && validPassword) { //authenticate session if valid and set user to id of user
         req.session.authenticated = true
         req.session.user = user._id
-        res.json({ message: 'Valid login.' })
+        res.status(200).json({ message: 'Valid login.' })
       } else {
         res.status(401).json({ message: 'Invalid login.' })
       }
