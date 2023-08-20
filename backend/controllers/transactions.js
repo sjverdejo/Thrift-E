@@ -5,8 +5,39 @@ const Transaction = require('../models/transaction')
 
 //GET route
 //Return one transaction
+transactionRouter.get('/', async (req, res) => {
+  if (req.session.authenticated) {
+    try {
+      const user = await User.findById(req.session.user) //Find current user
+      
+      res.json(user.transactions) //return current users transactions
+    } catch (error) {
+      console.log('Could not find user.')
+      res.status(404).json({ message: 'Unable to find User.' })
+    }
+  } else {
+    res.status(401).json({ message: 'Not authorized.' })
+  }
+})
 
 //Return specific transaction
+transactionRouter.get('/:id', async (req, res) => {
+  const id = req.params.id
+
+  if (req.session.authenticated) {
+    try {
+      const transaction = await Transaction.findById(id)
+
+      res.json(transaction)
+    } catch (error) {
+      console.log('Could not find transaction')
+      res.status(404).json({ message: 'Could not find transaction.' })
+    }
+  } else {
+    res.status(401).json({ message: 'Not authorized.'})
+  }
+})
+
 
 //POST route
 //transaction route to buy item and add to your transactions as well as user items
@@ -46,14 +77,14 @@ transactionRouter.post('/:id', async (req, res) => {
         res.status(200).json(transaction)
       } else {
         console.log('Item not found.')
-        res.status(404).json({ message: 'Item not found.'})
+        res.status(404).json({ message: 'Item not found.' })
       }
     } catch (error) {
       console.log(error)
-      res.status(404).json({ message: 'Error.'})
+      res.status(404).json({ message: 'Error.' })
     }
   } else {
-    res.status(401).json({ message: 'Not authorized.'})
+    res.status(401).json({ message: 'Not authorized.' })
   }
 })
 
