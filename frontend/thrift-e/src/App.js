@@ -3,10 +3,14 @@ import Login from './components/Login'
 
 const App = () => {
   const [user, setUser] = useState(null)
-  
+
+  const username = (user) => {
+    return (<h1>{user.username}</h1>)
+  }
   return (
     <>
-      <Login />
+      <Login user={user} setUser={setUser}/>
+      {user && username(user)}
     </>
   )
 }
