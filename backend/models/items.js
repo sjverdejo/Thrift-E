@@ -18,7 +18,9 @@ const itemSchema = new mongoose.Schema({
     required: true
   },
   //eventually add images
-
+  itemImages: [
+    String
+  ],
   seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

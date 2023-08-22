@@ -3,6 +3,7 @@ const express = require('express')
 const session = require('express-session')
 const app = express()
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const usersRouter = require('./controllers/users')
 const itemsRouter = require('./controllers/items')
 const transactionRouter = require('./controllers/transactions')
@@ -22,7 +23,7 @@ mongoose.connect(config.MONGODB_URI)
   })
 
 app.use(express.json())
-// app.use(express.urlencoded({extended: true}))
+app.use(fileUpload())
 app.use(cors({
   origin:'http://localhost:3000',
   credentials: true

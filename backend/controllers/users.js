@@ -1,3 +1,5 @@
+const s3Client = require('../utils/s3config')
+const { PutObjectCommand, DeleteObjectCommand } = require ('@aws-sdk/client-s3')
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/users')
@@ -5,7 +7,7 @@ const User = require('../models/users')
 //Just for testing
 usersRouter.get('/', async (req, res) => {
   if (req.session.authenticated) {
-    const users = await User.find({}).populate({path: 'items'})
+    const users = await User.find({})
 
     res.json(users)
   } else {
@@ -34,6 +36,27 @@ usersRouter.post('/', async (req, res) => {
     passwordHash,
     dateCreated
   })
+
+  //if uploading image
+  if (req.files) {
+    //EVENTUALLY add validation for spaces in name
+    const file =  req.files.file
+    const fileName = username + req.files.file.name
+
+    const bucketParams = {
+      Bucket: 'portfolioprojectbucket1',
+      Key: fileName,
+      Body: file.data,
+    }
+
+    try {
+      await s3Client.send(new PutObjectCommand(bucketParams))
+      user.profilePicture = fileName
+    } catch (err) {
+      console.log("Error here", err);
+      res.status(404).json({message: 'Could not upload image'})
+    }
+  }
 
   try {
     const savedUser = await user.save()
@@ -64,5 +87,9 @@ usersRouter.get('/:id', async (req, res) => {
     res.status(401).json({ message: 'Not Authenticated.'})
   }
 })
+
+//PUT route to update profile picture
+
+//DELETE route to remove profile picture
 
 module.exports = usersRouter
