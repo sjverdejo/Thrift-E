@@ -8,7 +8,7 @@ const Transaction = require('../models/transaction')
 transactionRouter.get('/', async (req, res) => {
   if (req.session.authenticated) {
     try {
-      const user = await User.findById(req.session.user) //Find current user
+      const user = await User.findById(req.session.user._id) //Find current user
       
       res.json(user.transactions) //return current users transactions
     } catch (error) {
@@ -50,7 +50,7 @@ transactionRouter.post('/:id', async (req, res) => {
       const item = await Item.findById(itemId)//Find item to be purchased
       if (item) {
         const seller = await User.findById(item.seller) //Find user selling item
-        const buyer = await User.findById(req.session.user) //Find user buying item
+        const buyer = await User.findById(req.session.user._id) //Find user buying item
 
         //new transaction object
         const transaction = new Transaction ({

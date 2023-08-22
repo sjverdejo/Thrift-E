@@ -6,8 +6,13 @@ axios.defaults.withCredentials = true
 
 const getAllItems = async () => {
   const req = await axios.get(`${baseUrl}/api/items`)
-  console.log('HERE', req)
   return req.data
 }
 
-export default { getAllItems }
+const postNewItem = async (itemDetails) => {
+  const req = await axios.post(`${baseUrl}/api/items`, itemDetails)
+  console.log('req')
+  return req.data
+}
+
+export default { getAllItems, postNewItem }

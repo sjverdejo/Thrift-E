@@ -22,7 +22,7 @@ usersRouter.post('/', async (req, res) => {
   if (password === '') { //if password does not exist send 404 status
     console.log('Failed to create user due to no password.')
     res.status(404).json({ message: 'Failed to create due to invalid password.' })
-
+    return
   }
 
   //secure password with bcrypt
@@ -47,11 +47,11 @@ usersRouter.post('/', async (req, res) => {
 
 //GET route to retrieve specific user
 //Return user with username
-usersRouter.get('/:username', async (req, res) => {
-  const username = req.params.username
+usersRouter.get('/:id', async (req, res) => {
+  const id = req.params.id
 
   if (req.session.authenticated) { //ensure authenticated
-    const user = await User.findOne({ username: username })
+    const user = await User.findById(id)
 
     if (user) { //if user exists return
       console.log('Successfully retrieved.')

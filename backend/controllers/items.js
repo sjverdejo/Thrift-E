@@ -40,7 +40,7 @@ itemsRouter.post('/', async (req, res) => {
   const datePosted = new Date()
 
   if (req.session.authenticated) {
-    const seller = req.session.user //set seller to authenticated user
+    const seller = req.session.user._id //set seller to authenticated user
   
     const user = await User.findById(seller)
     //create new item to send
@@ -79,7 +79,7 @@ itemsRouter.put('/:id', async (req, res) => {
     if (name && price && clothingType) {
       try {
         const item = await Item.findById(id)
-        if ((item.seller.toString() === req.session.user) && !item.sold) { //if seller is authenticated user and item is not sold yet
+        if ((item.seller.toString() === req.session.user._id) && !item.sold) { //if seller is authenticated user and item is not sold yet
           const updated = await Item.findByIdAndUpdate(id, { name, price, clothingType }, { new: true })
           res.status(200).json(updated)
           console.log(item.seller, 'Updated successfully.')
@@ -109,7 +109,7 @@ itemsRouter.delete('/:id', async (req, res) => {
   if (req.session.authenticated) {
     try {
       const itemToDelete = await Item.findByIdAndDelete(id)
-      if ((itemToDelete && (itemToDelete.seller.toString() === req.session.user) && !itemToDelete.sold)) { //check if item exists, matches seller and is not sold
+      if ((itemToDelete && (itemToDelete.seller.toString() === req.session.user._id) && !itemToDelete.sold)) { //check if item exists, matches seller and is not sold
         //ADD extra if condition the user is buyer + sold
         res.status(200).send(itemToDelete)
         console.log('Deleted Successfully.')

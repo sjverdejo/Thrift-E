@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import usersAPI from '../services/users'
+import loginAPI from '../services/login'
 
 const Login = ({setUser}) => {
   const [username, setUsername] = useState('')
@@ -13,7 +13,7 @@ const Login = ({setUser}) => {
       password: password
     }
 
-    usersAPI.login(newUser)
+    loginAPI.login(newUser)
       .then(res => {
         console.log(res)
         setUser(res)

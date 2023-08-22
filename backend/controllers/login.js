@@ -2,6 +2,16 @@ const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/users')
 
+//GET Route
+//Check if logged in
+loginRouter.get('/', async (req, res) => {
+  if (req.session.authenticated) {
+    res.json({loggedIn: true, user: req.session})
+  } else {
+    res.json({loggedIn: false, message: 'Not Authenticated.'})
+  }
+})
+
 //POST Route
 //Logging into the application
 loginRouter.post('/', async (req, res) => {
@@ -16,8 +26,8 @@ loginRouter.post('/', async (req, res) => {
   
       if (user && validPassword) { //authenticate session if valid and set user to id of user
         req.session.authenticated = true
-        req.session.user = user._id
-        res.status(200).json({ message: 'Valid login.' })
+        req.session.user = user
+        res.status(200).json(req.session)
       } else {
         res.status(401).json({ message: 'Invalid login.' })
       }

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import Register from './components/Register'
 import Login from './components/Login'
 import Items from './components/Items'
+import PostItem from './components/PostItem'
 import itemAPI from './services/items'
-import loginAPI from './services/users'
+import loginAPI from './services/login'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -44,6 +45,9 @@ const App = () => {
     return <Login setUser={setUser}/>
   }
   
+  const createForm = () => {
+    return (<PostItem />)
+  }
   const test = () => {
     console.log(user)
   }
@@ -60,6 +64,7 @@ const App = () => {
       <Test />
       <h1>Items:</h1>
       <br/>
+      {user && createForm()}
       <Items items={allItems} />
     </>
   )
