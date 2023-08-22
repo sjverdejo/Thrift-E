@@ -11,8 +11,17 @@ const getAllItems = async () => {
 
 const postNewItem = async (itemDetails) => {
   const req = await axios.post(`${baseUrl}/api/items`, itemDetails)
-  console.log('req')
   return req.data
 }
 
-export default { getAllItems, postNewItem }
+const updateItem = async (itemDetails, id) => {
+  const req = await axios.put(`${baseUrl}/api/items/${id}`, itemDetails)
+  return req.data
+}
+
+const deleteItem = async (itemDetails, id) => {
+  const req = await axios.put(`${baseUrl}/api/items/${id}`, itemDetails)
+  return req.data
+}
+
+export default { getAllItems, postNewItem, updateItem, deleteItem }
