@@ -20,7 +20,7 @@ const updateItem = async (itemDetails, id) => {
 }
 
 const deleteItem = async (id) => {
-  const req = await axios.put(`${baseUrl}/api/items/${id}`)
+  const req = await axios.delete(`${baseUrl}/api/items/${id}`)
   return req.data
 }
 
