@@ -1,8 +1,10 @@
+const config = require('../utils/config')
 const s3Client = require('../utils/s3config')
 const { PutObjectCommand, DeleteObjectCommand } = require ('@aws-sdk/client-s3')
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/users')
+const { findById } = require('../models/items')
 
 //Just for testing
 usersRouter.get('/', async (req, res) => {
@@ -41,10 +43,10 @@ usersRouter.post('/', async (req, res) => {
   if (req.files) {
     //EVENTUALLY add validation for spaces in name
     const file =  req.files.file
-    const fileName = username + req.files.file.name
+    const fileName = username + '/profilepicture/' + req.files.file.name
 
     const bucketParams = {
-      Bucket: 'portfolioprojectbucket1',
+      Bucket: config.AWS_S3_BUCKET_NAME,
       Key: fileName,
       Body: file.data,
     }
@@ -56,6 +58,8 @@ usersRouter.post('/', async (req, res) => {
       console.log("Error here", err);
       res.status(404).json({message: 'Could not upload image'})
     }
+  } else {
+    user.profilePicture = 'void.png'
   }
 
   try {
@@ -89,7 +93,79 @@ usersRouter.get('/:id', async (req, res) => {
 })
 
 //PUT route to update profile picture
+usersRouter.put('/', async (req, res) => {
+  if (req.session.authenticated) {
+    const updateUser = await User.findById(req.session.user._id)
+
+    if (updateUser) {
+      if (req.files) {
+        const fileName = updateUser.username + '/' + req.files.file.name
+        const bucketParams = {
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: fileName,
+          Body: req.files.file.data,
+        }
+
+        try {
+          //if a user profile picture exists already, delete it
+          if (updateUser.profilePicture !== 'void.png') {
+            const toDeleteBucketParams = {
+              Bucket: config.AWS_S3_BUCKET_NAME,
+              Key: updateUser.profilePicture
+            }
+    
+            //delete old profile picture
+            await s3Client.send(new DeleteObjectCommand(toDeleteBucketParams))
+          }
+    
+          await s3Client.send(new PutObjectCommand(bucketParams))
+          updateUser.profilePicture = fileName
+          await updateUser.save()
+          res.json({message: 'Updated user.'})
+        } catch (err) {
+          console.log("Error here", err);
+          res.status(404).json({message: 'Could not upload image.'})
+        }
+      } else {
+        //return with no changes
+        res.status(200).json({message: 'no changes.'})
+        return
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authenticated.'})
+    }
+  } else {
+    res.status(401).json({ message: 'Not Authenticated.'})
+  }
+})
 
 //DELETE route to remove profile picture
+usersRouter.delete('/', async (req, res) => {
+
+  if (req.session.authenticated) {
+    const user = await User.findById(req.session.user._id)
+
+    if (user) {
+      const bucketParams = {
+        Bucket: config.AWS_S3_BUCKET_NAME,
+        Key: user.profilePicture
+      }
+
+      try {
+        await s3Client.send(new DeleteObjectCommand(bucketParams))
+        user.profilePicture = 'void.png'
+        await user.save()
+        res.json({message: 'Deleted image successfully'})
+      } catch (err) {
+        console.log(err)
+        res.status(404).json({message: 'Could not delete image.'})
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authenticated.'})
+    }
+  } else {
+    res.status(401).json({ message: 'Not Authenticated.'})
+  }
+})
 
 module.exports = usersRouter

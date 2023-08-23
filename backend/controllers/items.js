@@ -1,6 +1,9 @@
 const itemsRouter = require('express').Router()
+const config = require('../utils/config')
 const User = require('../models/users')
 const Item = require('../models/items')
+const s3Client = require('../utils/s3config')
+const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 
 //GET routes
 //GET all items if authenticated
@@ -52,7 +55,46 @@ itemsRouter.post('/', async (req, res) => {
       seller,
       isSold: false //set isSold to false since new item
     })
+
+    if (req.files) {
+      //check IF multiple files or singular
+      const allFiles = req.files.files
+      if (Array.isArray(req.files.files)) {
+        await Promise.all(allFiles.map(async (file) => {
+          const imageName = user.username + '/items/' + file.name
+          const bucketParams = {
+            Bucket: config.AWS_S3_BUCKET_NAME,
+            Key: imageName,
+            Body: file.data
+          }
   
+          try {
+            await s3Client.send(new PutObjectCommand(bucketParams))
+          } catch (err) {
+            console.log(err)
+            res.status(404).json({ message: 'Could not add image.' })
+          }
+          item.itemImages = item.itemImages.concat(imageName)
+        }))
+      } else {
+        const imageName = user.username + '/items/' + allFiles.name
+        const bucketParams = {
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: imageName,
+          Body: allFiles.data
+        }
+  
+        try {
+          await s3Client.send(new PutObjectCommand(bucketParams))
+        } catch (err) {
+          console.log(err)
+          res.status(404).json({ message: 'Could not add image.' })
+        }
+        
+        item.itemImages = item.itemImages.concat(imageName)
+      }
+    }
+
     //if creation successful, save to database otherwise send 404 error
     try {
       const newItem = await item.save()
@@ -93,7 +135,45 @@ itemsRouter.put('/:id', async (req, res) => {
       }
     } else {
       console.log('Failed to update missing name or price or clothingType.')
-        res.status(404).json({ message: 'Failed to update.' })
+      res.status(404).json({ message: 'Failed to update.' })
+    }
+  } else {
+    res.status(401).json({ message: 'Not Authenticated.' })
+  }
+})
+
+//PUT route
+//Add new image to item images
+itemsRouter.put('/:id/images', async (req, res) => {
+  const id = req.params.id
+
+  if (req.session.authenticated) {
+    const item = await Item.findById(id)
+    if (item && item.seller.toString() === req.session.user._id) {
+      console.log('here')
+      if (req.files) {
+        const imageName = req.session.user.username + '/items/' + req.files.files.name
+        const bucketParams = {
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: imageName,
+          Body: req.files.files.data
+        }
+  
+        try {
+          await s3Client.send(new PutObjectCommand(bucketParams))
+          item.itemImages = item.itemImages.concat(imageName)
+          const updated = await item.save()
+          res.json(updated)
+        } catch (err) {
+          console.log(err)
+          res.status(404).json({ message: 'Could not add image.' })
+        }
+      } else {
+        res.json({ message: 'No images added'})
+        return
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authenticated.' })
     }
   } else {
     res.status(401).json({ message: 'Not Authenticated.' })
@@ -108,8 +188,22 @@ itemsRouter.delete('/:id', async (req, res) => {
   //if unable to delete, 404 status. Otherwise delete item by Id from database
   if (req.session.authenticated) {
     try {
-      const itemToDelete = await Item.findByIdAndDelete(id)
-      if ((itemToDelete && (itemToDelete.seller.toString() === req.session.user._id) && !itemToDelete.sold)) { //check if item exists, matches seller and is not sold
+      const user = await User.findById(req.session.user._id)
+      const item = await Item.findById(id)
+      if ((item && (item.seller.toString() === req.session.user._id) && !item.sold)) { //check if item exists, matches seller and is not sold
+        if (item.itemImages) {
+          for (let i in item.itemImages) {
+            const bucketParams = {
+              Bucket: config.AWS_S3_BUCKET_NAME,
+              Key: item.itemImages[i]
+            }
+            await s3Client.send(new DeleteObjectCommand(bucketParams))
+          }
+        }
+        //delete from user item array
+        user.items = user.items.filter((items) => items._id.toString() !== id)
+        const itemToDelete = await Item.findByIdAndDelete(id)
+        await user.save()
         //ADD extra if condition the user is buyer + sold
         res.status(200).send(itemToDelete)
         console.log('Deleted Successfully.')
@@ -117,13 +211,16 @@ itemsRouter.delete('/:id', async (req, res) => {
         console.log('Unsuccessful deletion.')
         res.status(404).json({ message: 'Delete unsuccessful.' })
       }
-    } catch {
-      console.log('Not found')
+    } catch (err) {
+      console.log('Not found', err)
       res.status(404).json({ message: 'Not Found.' })
     }
   } else {
     res.status(401).json({ message: 'Not Authenticated.' })
   }
 })
+
+//Delete image from array
+
 
 module.exports = itemsRouter
