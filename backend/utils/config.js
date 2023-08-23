@@ -16,6 +16,9 @@ const AWS_ACCESS_SECRET = process.env.AWS_ACCESS_SECRET
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME
 const REGION = process.env.REGION
 
+//Stripe connection API keys
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
+
 module.exports = {
   PORT,
   MONGODB_URI,
@@ -24,6 +27,7 @@ module.exports = {
   AWS_ACCESS_KEY,
   AWS_ACCESS_SECRET,
   AWS_S3_BUCKET_NAME,
-  REGION
+  REGION,
+  STRIPE_SECRET_KEY
 }
 

@@ -1,7 +1,10 @@
+const config = require('../utils/config')
 const transactionRouter = require('express').Router()
 const User = require('../models/users')
 const Item = require('../models/items')
 const Transaction = require('../models/transaction')
+
+const stripe = require('stripe')(config.STRIPE_SECRET_KEY)
 
 //GET route
 //Return one transaction
@@ -88,4 +91,19 @@ transactionRouter.post('/:id', async (req, res) => {
   }
 })
 
+transactionRouter.post('/buy', async (req, res) => {
+  const { price } = req.body
+
+  const  paymentIntent = await stripe.paymentIntents.create({
+    amount: price * 1.13,
+    currency: 'cad',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  })
+
+  res.send({
+    clientSecret: paymentIntent.client_secret
+  })
+})
 module.exports = transactionRouter
