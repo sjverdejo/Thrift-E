@@ -18,7 +18,7 @@ usersRouter.get('/', async (req, res) => {
 })
 
 //POST route to create a new user
-//Create a new user, does not need authentication
+//Create a new user, does not need authentication //REGISTRATION
 usersRouter.post('/', async (req, res) => {
   const { username, password } = req.body
   const dateCreated = new Date() //set date to current date

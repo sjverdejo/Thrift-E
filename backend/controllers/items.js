@@ -220,7 +220,35 @@ itemsRouter.delete('/:id', async (req, res) => {
   }
 })
 
-//Delete image from array
+//Delete image from itemImages array
+itemsRouter.delete('/:id/images', async (req, res) => {
+  const id = req.params.id
+  const { imageName } = req.body
+  if (req.session.authenticated) {
+    const item = await Item.findById(id)
+
+    if (item && (item.seller.toString() === req.session.user._id) && !item.isSold) {
+      const bucketParams = {
+        Bucket: config.AWS_S3_BUCKET_NAME,
+        Key: imageName
+      }
+
+      try {
+        await s3Client.send(new DeleteObjectCommand(bucketParams))
+        item.itemImages = item.itemImages.filter((item) => item !== imageName)
+        await item.save()
+        res.json(item)
+      } catch (err) {
+        console.log('Could not delete.', err)
+        res.status(404).json({message: 'Could not delete image.'})
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authenticated.' })
+    }
+  } else {
+    res.status(401).json({ message: 'Not Authenticated.' })
+  }
+})
 
 
 module.exports = itemsRouter
