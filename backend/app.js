@@ -9,9 +9,10 @@ const itemsRouter = require('./controllers/items')
 const transactionRouter = require('./controllers/transactions')
 const loginRouter = require('./controllers/login')
 const logoutRouter = require('./controllers/logout')
-
+const stripe = require('stripe')(config.STRIPE_SECRET_KEY)
 const mongoose = require('mongoose')
 
+const Test = require('./models/test')
 mongoose.set('strictQuery', false)
 
 mongoose.connect(config.MONGODB_URI)
@@ -28,6 +29,8 @@ app.use(cors({
   origin:'http://localhost:3000',
   credentials: true
 }))
+// app.use(cors())
+
 app.use(
   session({
     secret: config.SECRET,
@@ -42,5 +45,35 @@ app.use('/api/items', itemsRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/buy', transactionRouter)
 app.use('/api/logout', logoutRouter)
+
+app.post('/webhook', express.json({type: 'application/json'}), async (request, response) => {
+  const event = request.body;
+  console.log('in webhook')
+
+  // Handle the event
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object;
+      // Then define and call a method to handle the successful payment intent.
+      // handlePaymentIntentSucceeded(paymentIntent);
+      const testi = new Test({
+        test: 'tessst'
+      })
+
+      await testi.save()
+      break;
+    case 'payment_method.attached':
+      const paymentMethod = event.data.object;
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handlePaymentMethodAttached(paymentMethod);
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a response to acknowledge receipt of the event
+  response.json({received: true});
+});
 
 module.exports = app

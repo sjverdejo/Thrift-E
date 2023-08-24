@@ -1,4 +1,5 @@
 const config = require('../utils/config')
+const express = require('express')
 const transactionRouter = require('express').Router()
 const User = require('../models/users')
 const Item = require('../models/items')
@@ -39,6 +40,22 @@ transactionRouter.get('/:id', async (req, res) => {
   } else {
     res.status(401).json({ message: 'Not authorized.'})
   }
+})
+
+transactionRouter.post('/purchase', async (req, res) => {
+  const { price } = req.body
+
+  const  paymentIntent = await stripe.paymentIntents.create({
+    amount: price,
+    currency: 'cad',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  })
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  })
 })
 
 
@@ -91,19 +108,4 @@ transactionRouter.post('/:id', async (req, res) => {
   }
 })
 
-transactionRouter.post('/buy', async (req, res) => {
-  const { price } = req.body
-
-  const  paymentIntent = await stripe.paymentIntents.create({
-    amount: price * 1.13,
-    currency: 'cad',
-    automatic_payment_methods: {
-      enabled: true,
-    },
-  })
-
-  res.send({
-    clientSecret: paymentIntent.client_secret
-  })
-})
 module.exports = transactionRouter

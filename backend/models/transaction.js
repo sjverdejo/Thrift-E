@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const transactionSchema = new mongoose.Schema({
-  transactions: [{
     item: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Item'
@@ -11,7 +10,6 @@ const transactionSchema = new mongoose.Schema({
       ref: 'User'
     },
     datePurchased: Date
-  }]
 })
 
 const Transaction = mongoose.model('Transaction', transactionSchema)
