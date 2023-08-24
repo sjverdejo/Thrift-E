@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react'
-import Register from './components/Register'
-import Login from './components/Login'
-import Items from './components/Items'
-import PostItem from './components/PostItem'
+import { Outlet, Link } from 'react-router-dom'
+import LandingPage from './routes/LandingPage'
 import itemAPI from './services/items'
 import loginAPI from './services/login'
 
 const App = () => {
+
   const [user, setUser] = useState(null)
   const [allItems, setItems] = useState([])
 
@@ -29,43 +28,17 @@ const App = () => {
         setItems(res)
       })
       .catch(err => {
-        console.log(err.response.data.message)
+        console.log(err)
       })
   }, [user])
-  
-  const username = ({user}) => {
-    return (<h1>Hello {user.username}</h1>)
-  }
-
-  const registerForm = () => {
-    return <Register />
-  }
-  const loginForm = () => {
-    console.log('entered login')
-    return <Login setUser={setUser}/>
-  }
-  
-  const createForm = () => {
-    return (<PostItem />)
-  }
-  const test = () => {
-    console.log(user)
-  }
-  const Test = () => {
-    return (<button onClick={test}>Test</button>)
-    // console.log(user)
-  }
 
   return (
     <>
-      {!user && registerForm()}
-      {!user && loginForm()}
-      {user && username(user)}
-      <Test />
-      <h1>Items:</h1>
-      <br/>
-      {user && createForm()}
-      <Items items={allItems} />
+      Nav Bar
+      {!user && <LandingPage setUser={setUser}/>} 
+      {user && <Link to='/items'>All Items</Link>}
+      {user && <Outlet context={{user, setUser, allItems, setItems}}/>}
+      <Link to='/'>Home</Link>
     </>
   )
 }
