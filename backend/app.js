@@ -9,10 +9,8 @@ const itemsRouter = require('./controllers/items')
 const transactionRouter = require('./controllers/transactions')
 const loginRouter = require('./controllers/login')
 const logoutRouter = require('./controllers/logout')
-const stripe = require('stripe')(config.STRIPE_SECRET_KEY)
 const mongoose = require('mongoose')
 
-const Test = require('./models/test')
 mongoose.set('strictQuery', false)
 
 mongoose.connect(config.MONGODB_URI)
@@ -56,11 +54,7 @@ app.post('/webhook', express.json({type: 'application/json'}), async (request, r
       const paymentIntent = event.data.object;
       // Then define and call a method to handle the successful payment intent.
       // handlePaymentIntentSucceeded(paymentIntent);
-      const testi = new Test({
-        test: 'tessst'
-      })
-
-      await testi.save()
+      console.log('event data', event.data.object.metadata)
       break;
     case 'payment_method.attached':
       const paymentMethod = event.data.object;

@@ -43,19 +43,29 @@ transactionRouter.get('/:id', async (req, res) => {
 })
 
 transactionRouter.post('/purchase', async (req, res) => {
-  const { price } = req.body
+  const { price, item, buyer } = req.body
 
   const  paymentIntent = await stripe.paymentIntents.create({
-    amount: price,
+    amount: 300,
     currency: 'cad',
     automatic_payment_methods: {
       enabled: true,
     },
+    metadata: {
+      price: price,
+      itemId: item._id,
+      seller: item.seller,
+      buyer: buyer
+    }
   })
-
-  res.send({
-    clientSecret: paymentIntent.client_secret,
-  })
+    
+  if (paymentIntent) {
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    })
+  } else {
+    res.status(404).json({message: 'NO'})
+  }
 })
 
 

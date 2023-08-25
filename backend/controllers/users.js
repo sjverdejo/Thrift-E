@@ -78,7 +78,7 @@ usersRouter.get('/:id', async (req, res) => {
   const id = req.params.id
 
   if (req.session.authenticated) { //ensure authenticated
-    const user = await User.findById(id)
+    const user = await User.findById(id).populate('items')
 
     if (user) { //if user exists return
       console.log('Successfully retrieved.')
