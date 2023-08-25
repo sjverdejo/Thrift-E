@@ -8,15 +8,13 @@ const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHKEY)
 
 const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState('')
-  const { user, allItems } = useOutletContext()
-  const item = allItems[1]
-  console.log(item)
-  const itemprice = 3000
+  const { item, user } = useOutletContext()
+
   useEffect(() => {
     fetch('http://localhost:3001/api/buy/purchase', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ price:  300, item: item, buyer: user.user._id }),
+      body: JSON.stringify({ price: item.price, item: item, buyer: user.user._id }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret))
