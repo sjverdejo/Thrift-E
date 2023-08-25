@@ -36,9 +36,10 @@ const App = () => {
     <>
       Nav Bar
       {!user && <LandingPage setUser={setUser}/>} 
-      {user && <Link to='/items'>All Items</Link>}
+      {user && <Link to='/listings'>All Items</Link>}
+      {user && <Link to='/create'>Create new</Link>}
       {user && <Outlet context={{user, setUser, allItems, setItems}}/>}
-      <Link to='/'>Home</Link>
+      <Link to='/home'>Home</Link>
     </>
   )
 }

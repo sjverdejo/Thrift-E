@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import itemsAPI from '../services/items'
+import itemsAPI from '../../services/items'
 
-const PostItem = () => {
+const NewListing = () => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [clothingType, setClothingType] = useState('')
@@ -17,15 +17,20 @@ const PostItem = () => {
       .then(res => {
         console.log(res)
       })
+      .catch(err => {
+        console.log(err)
+      })
   }
+  
   return (
     <form onSubmit={createItem}>
       <input value={name} onChange={({target}) => setName(target.value)}/>
       <input value={price} onChange={({target}) => setPrice(target.value)}/>
       <input value={clothingType} onChange={({target}) => setClothingType(target.value)}/>
+      {/**Add images */}
       <input type='submit' value='Post Item Listing'/>
     </form>
   )
 }
 
-export default PostItem
+export default NewListing

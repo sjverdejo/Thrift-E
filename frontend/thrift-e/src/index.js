@@ -8,9 +8,9 @@ import {
 import App from './App'
 import Home from './routes/Home'  
 import UserPage from './routes/UserPage'
-import UserItems from './routes/UsersItems'
-import ItemsPage from './routes/ItemsPage'
+import AllListingsPage from './routes/AllListingsPage'
 import LandingPage from './routes/LandingPage'
+import CreateListing from './routes/CreateListing'
 
 const router = createBrowserRouter([
   {
@@ -28,16 +28,14 @@ const router = createBrowserRouter([
       {
         path: '/user/:id',
         element: <UserPage />,
-        children: [
-          {
-            path: 'items',
-            element: <ItemsPage />
-          }
-        ]
       },
       {
-        path:'/items',
-        element: <ItemsPage />
+        path: '/listings',
+        element: <AllListingsPage />
+      },
+      {
+        path: '/create',
+        element: <CreateListing />
       }
     ]
   },
