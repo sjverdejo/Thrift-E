@@ -11,6 +11,8 @@ import UserPage from './routes/UserPage'
 import AllListingsPage from './routes/AllListingsPage'
 import LandingPage from './routes/LandingPage'
 import CreateListing from './routes/CreateListing'
+import ListingPage from './routes/ListingPage'
+import CheckoutPage from './routes/CheckoutPage'
 
 const router = createBrowserRouter([
   {
@@ -28,7 +30,7 @@ const router = createBrowserRouter([
       {
         path: '/user/:id',
         element: <UserPage />,
-      },
+      }, 
       {
         path: '/listings',
         element: <AllListingsPage />
@@ -36,7 +38,17 @@ const router = createBrowserRouter([
       {
         path: '/create',
         element: <CreateListing />
-      }
+      },
+      {
+        path: '/listing/:id',
+        element: <ListingPage />,
+        children: [
+          {
+            path: 'checkout',
+            element: <CheckoutPage />
+          }
+        ]
+      },
     ]
   },
   

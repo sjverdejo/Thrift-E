@@ -28,6 +28,7 @@ const CheckoutForm = () => {
       switch (paymentIntent.status) {
         case 'succeeded':
           console.log('Succeed')
+          console.log(paymentIntent)
           setMessage('Payment success')
           break
         case 'processing':
@@ -43,7 +44,7 @@ const CheckoutForm = () => {
           break
       }
     })
-  }, [stripe])
+  })
 
   const paymentElementOptions = {
     layout: 'tabs'
@@ -71,7 +72,7 @@ const CheckoutForm = () => {
   }
   return (
     <form id='payment-form' onSubmit={submitPayment}>
-      <PaymentElement options={paymentElementOptions} />
+      <PaymentElement id='payment-element' options={paymentElementOptions} />
       <button type='submit'>Pay</button>
       {message && <div id="payment-message">{message}</div>}
     </form>

@@ -9,7 +9,7 @@ const Home = () => {
       {/* Link to log in or sign up*/}
       <Link to='/listings'>View All Items For Sale</Link>
       <Link to={`/user/${user.user._id}`}>My Profile</Link>
-      <Link to=''>My items</Link>
+      <Link to='/checkout'>Checkout</Link>
     </div>
   )
 }
