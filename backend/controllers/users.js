@@ -79,8 +79,14 @@ usersRouter.get('/:id', async (req, res) => {
 
   if (req.session.authenticated) { //ensure authenticated
     const user = await User.findById(id)
-                          .populate('items')
-                          .populate('transactions')
+                          .populate({path:'items'})
+                          .populate({path: 'transactions',
+                                    populate: {
+                                      path: 'item',
+                                      model: 'Item'
+                                    }})
+                          // .populate({'transactions', populate: {}})
+  
 
     if (user) { //if user exists return
       console.log('Successfully retrieved.')
