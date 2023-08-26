@@ -6,7 +6,7 @@ const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const usersRouter = require('./controllers/users')
 const itemsRouter = require('./controllers/items')
-const transactionRouter = require('./controllers/transactions')
+const { transferItem, transactionRouter } = require('./controllers/transactions')
 const loginRouter = require('./controllers/login')
 const logoutRouter = require('./controllers/logout')
 const mongoose = require('mongoose')
@@ -54,12 +54,9 @@ app.post('/webhook', express.json({type: 'application/json'}), async (request, r
       const paymentIntent = event.data.object;
       // Then define and call a method to handle the successful payment intent.
       // handlePaymentIntentSucceeded(paymentIntent);
-      console.log('event data', event.data.object.metadata)
-      break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
+      const { seller, buyer, itemId } = event.data.object.metadata
+      transferItem(seller, buyer, itemId)
+
       break;
     // ... handle other event types
     default:

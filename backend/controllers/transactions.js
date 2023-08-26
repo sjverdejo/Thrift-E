@@ -64,7 +64,6 @@ transactionRouter.post('/purchase', async (req, res) => {
   
 })
 
-
 //POST route
 //transaction route to buy item and add to your transactions as well as user items
 //and transactions
@@ -114,4 +113,33 @@ transactionRouter.post('/:id', async (req, res) => {
   }
 })
 
-module.exports = transactionRouter
+//HELPER function
+const transferItem = async (sellerId, buyerId, itemId) => {
+  const item = await Item.findById(itemId)//Find item to be purchased
+  const buyer = await User.findById(buyerId) //Find user selling item
+  const seller = await User.findById(sellerId) //Find user buying item
+
+  //new transaction object
+  const transaction = new Transaction ({
+    item: itemId,
+    buyer: buyerId,
+    datePurchased: new Date()
+  })
+
+  await transaction.save()
+
+  //update seller transaction list and item list
+  seller.items = seller.items.filter((i) => i._id != itemId)
+  seller.transactions = seller.transactions.concat(transaction)
+  await seller.save()
+
+  //update buyer transaction list and item list
+  buyer.items = buyer.items.concat(itemId)
+  buyer.transactions = buyer.transactions.concat(transaction)
+  await buyer.save()
+
+  item.isSold = true //set item to sold
+  await item.save()
+} 
+
+module.exports = { transactionRouter, transferItem}
