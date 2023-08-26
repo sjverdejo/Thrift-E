@@ -13,12 +13,17 @@ import LandingPage from './routes/LandingPage'
 import CreateListing from './routes/CreateListing'
 import ListingPage from './routes/ListingPage'
 import CheckoutPage from './routes/CheckoutPage'
+import Results from './routes/Results'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
+      {
+        path: '/results',
+        element: <Results />
+      },
       {
         path: '/login',
         element: <LandingPage />

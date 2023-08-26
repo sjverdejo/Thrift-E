@@ -1,4 +1,3 @@
-import { Link, useParams } from 'react-router-dom'
 import Void from '../../assets/void.png'
 
 const Item = ({item}) => {

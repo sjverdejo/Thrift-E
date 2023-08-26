@@ -2,6 +2,7 @@ import { useOutletContext, Link } from "react-router-dom"
 
 const Home = () => {
   const { user } = useOutletContext()
+  
   return (
     <div>
       <h1>Welcome to Thrift-E!</h1>

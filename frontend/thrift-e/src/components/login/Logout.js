@@ -1,12 +1,13 @@
 import loginAPI from '../../services/login'
 import { useNavigate } from 'react-router-dom'
-const Logout = () => {
+const Logout = ({setUser}) => {
   const navigate = useNavigate()
   const logOut = () => {
     loginAPI.logout()
       .then(res => {
         console.log(res)
         //Set user to null maybe
+        setUser(null)
         navigate('/')
       })
       .catch(err => {
