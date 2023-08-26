@@ -1,4 +1,4 @@
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
@@ -8,7 +8,8 @@ const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHKEY)
 
 const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState('')
-  const { item, user } = useOutletContext()
+  const { item, user, setMessage } = useOutletContext()
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetch('http://localhost:3001/api/buy/purchase', {
@@ -18,7 +19,10 @@ const CheckoutPage = () => {
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret))
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        navigate('/')
+      })
 
   }, [])
 

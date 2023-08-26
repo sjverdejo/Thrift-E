@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import {
   PaymentElement,
   useStripe,
@@ -8,9 +9,10 @@ import {
 const CheckoutForm = () => {
   const stripe = useStripe()
   const elements = useElements()
+  const navigate = useNavigate()
 
-  const [message, setMessage] = useState(null)
-  
+  const { item, setMessage } = useOutletContext()
+
   useEffect(() => {
     if (!stripe) {
       return
@@ -29,22 +31,18 @@ const CheckoutForm = () => {
         case 'succeeded':
           console.log('Succeed')
           console.log(paymentIntent)
-          setMessage('Payment success')
+          setMessage('Payment Successful!')
+          navigate('/home')
           break
         case 'processing':
-          console.log('processing')
           setMessage('Payment processing')
           break
-        case 'requires_payment_method':
-          setMessage('Your payment was not successful, please try again.')
-          break
         default:
-          console.log('Succeed')
-          setMessage('Something went wrong')
+          setMessage('Something went wrong.')
           break
       }
     })
-  })
+  }, [stripe])
 
   const paymentElementOptions = {
     layout: 'tabs'
@@ -60,21 +58,20 @@ const CheckoutForm = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:3000/',
+        return_url: `http://localhost:3000/listing/${item._id}/checkout`,
       }
     })
 
     if (error.type === 'card_error' || error.type === 'validation_error') {
-      setMessage(error.message)
+      console.log('error message')
     } else {
-      setMessage('Unexpected error occured')
+      console.log('unexpected')
     }
   }
   return (
     <form id='payment-form' onSubmit={submitPayment}>
       <PaymentElement id='payment-element' options={paymentElementOptions} />
       <button type='submit'>Pay</button>
-      {message && <div id="payment-message">{message}</div>}
     </form>
   )
 }
