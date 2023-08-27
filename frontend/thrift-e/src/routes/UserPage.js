@@ -67,8 +67,8 @@ const UserPage = () => {
                   </button>
                     {
                       showSold
-                        ? <Transactions list={profile.transactions.filter(t => t.item.seller.toString() === profile._id)} />
-                        : <Transactions list={profile.transactions.filter(t => t.item.seller.toString() !== profile._id)} />
+                        ? <Transactions list={profile.transactions.filter(t => t.item.seller.toString() === profile._id)} isSeller={true} />
+                        : <Transactions list={profile.transactions.filter(t => t.item.seller.toString() !== profile._id)} isSeller={false}/>
                     }
                 </div>
                 )

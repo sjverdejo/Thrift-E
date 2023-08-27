@@ -1,8 +1,8 @@
 import Transaction from "./Transaction"
 
-const Transactions = ({list}) => {
+const Transactions = ({list, isSeller}) => {
   return (
-    list.map(t => <Transaction transaction={t}/>)
+    list.map(t => <Transaction transaction={t} isSeller={isSeller}/>)
   )
 }
 

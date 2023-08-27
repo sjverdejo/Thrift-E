@@ -41,7 +41,7 @@ const App = () => {
       {user && <Link to='/create'>Create new</Link>}
       {user && <Outlet context={{user, setUser, allItems, setItems, setMessage}}/>}
       <h4>{message}</h4>
-      <Logout setUser={setUser}/>
+      {user && <Logout setUser={setUser}/> }
       <Link to='/home'>Home</Link>
     </>
   )
