@@ -39,6 +39,7 @@ usersRouter.post('/', async (req, res) => {
     dateCreated
   })
 
+  
   //if uploading image
   if (req.files) {
     //EVENTUALLY add validation for spaces in name
@@ -58,8 +59,6 @@ usersRouter.post('/', async (req, res) => {
       console.log("Error here", err);
       res.status(404).json({message: 'Could not upload image'})
     }
-  } else {
-    user.profilePicture = 'void.png'
   }
 
   try {

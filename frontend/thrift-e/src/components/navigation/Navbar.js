@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import Logout from '../login/Logout'
 const Navbar = ({user}) => {
   if (user) {
     return (
@@ -9,7 +8,6 @@ const Navbar = ({user}) => {
           <li><Link to='/listings'>All Listings</Link></li>
           <li><Link to={`user/${user.user._id}`}>My Profile</Link></li>
           <li><Link to='/create'>Sell</Link></li>
-          <li><Logout /></li>
         </ul>
     </div>
     )

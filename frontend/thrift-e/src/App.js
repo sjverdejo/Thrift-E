@@ -3,8 +3,8 @@ import { Outlet, Link } from 'react-router-dom'
 import LandingPage from './routes/LandingPage'
 import itemAPI from './services/items'
 import loginAPI from './services/login'
-import Logout from './components/login/Logout'
 import Navbar from './components/navigation/Navbar'
+import Logout from './components/login/Logout'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -40,6 +40,7 @@ const App = () => {
       {!user && <LandingPage setUser={setUser}/>}
       {user && <Outlet context={{user, setUser, allItems, setItems, setMessage}}/>}
       <h4>{message}</h4>
+      <Logout setUser={setUser}/>
     </>
   )
 }

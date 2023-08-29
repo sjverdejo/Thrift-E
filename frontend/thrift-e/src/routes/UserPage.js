@@ -14,7 +14,6 @@ const UserPage = () => {
   const [showItems, setShowItems] = useState(false)
   const [showSold, setShowSold] = useState(false)
   
-  
   useEffect(()=> {
     usersAPI.getUser(id)
       .then(res => {
@@ -28,22 +27,14 @@ const UserPage = () => {
 
   }, [user, id])
 
-  const transactionList = () => {
-    if (showSold) {
-      return (
-        <h1>Hi</h1>
-      )
-    } else {
 
-    }
-  }
   const profilePage = () => {
     const transactions = profile.transactions
     return (
       <div>
           <h1>{profile.username}</h1>
           {/* Change to image if available */}
-          <img src={Void} alt={'No img'} width={100}/>
+          {profile.profilePicture ? <img src={process.env.REACT_APP_S3 + profile.profilePicture} alt='profile pic' width={100} /> : <img src={Void} alt='No img' width={100}/>}
           <h2>{profile.dateCreated}</h2>
           <button onClick={()=> {setShowItems(!showItems); setShowHistory(false)}}>Show Items</button>
           <button onClick={()=> {setShowHistory(!showHistory); setShowItems(false)}}>Show Transactions</button>
