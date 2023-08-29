@@ -13,6 +13,7 @@ const ListingPage = () => {
     return (
       <div>
         <Item item={item}/>
+        <h3>Type: {item.clothingType}</h3>
         <Link to={`/user/${item.seller}`}>Seller</Link>
         <br/>
         {isBuyer && 

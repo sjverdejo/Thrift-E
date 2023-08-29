@@ -2,7 +2,7 @@ import Transaction from "./Transaction"
 
 const Transactions = ({list, isSeller}) => {
   return (
-    list.map(t => <Transaction transaction={t} isSeller={isSeller}/>)
+    list.map(t => <Transaction key={t._id} transaction={t} isSeller={isSeller}/>)
   )
 }
 

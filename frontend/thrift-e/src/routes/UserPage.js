@@ -45,9 +45,9 @@ const UserPage = () => {
           {/* Change to image if available */}
           <img src={Void} alt={'No img'} width={100}/>
           <h2>{profile.dateCreated}</h2>
-          
+          <button onClick={()=> {setShowItems(!showItems); setShowHistory(false)}}>Show Items</button>
+          <button onClick={()=> {setShowHistory(!showHistory); setShowItems(false)}}>Show Transactions</button>
           <div id='forItems'>
-            <button onClick={()=> {setShowItems(!showItems); setShowHistory(false)}}>Show Items</button>
             {(showItems && profile.items) &&
               <div>
                 <h3>Items</h3>
@@ -57,7 +57,7 @@ const UserPage = () => {
           </div>
           {user.user._id === profile._id &&
             <div id='forTransactions'>
-            <button onClick={()=> {setShowHistory(!showHistory); setShowItems(false)}}>Show Transactions</button>
+            
               {(showHistory && transactions) &&
                 (
                 <div>

@@ -4,29 +4,60 @@ import itemsAPI from '../../services/items'
 const NewListing = () => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
-  const [clothingType, setClothingType] = useState('')
+  const [clothingType, setClothingType] = useState('Tanktop')
 
-  const createItem = () => {
-    const newItem = {
-      name: name,
-      price: price,
-      clothingType: clothingType
+  const createItem = (e) => {
+    e.preventDefault()
+
+    if (!validPrice(price)) {
+      //update msg
+      console.log('NO')
+      return
     }
+    //update msg
+      const newItem = {
+        name: name,
+        price: price,
+        clothingType: clothingType
+      }
 
-    itemsAPI.postNewItem(newItem)
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      itemsAPI.postNewItem(newItem)
+        .then(res => {
+          //redirect to profile
+          console.log('here')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+  }
+  
+  const validPrice = (p) => {
+    if (!isNaN(p) && p > 0) {
+      return true
+    } else {
+      return false
+    }
   }
   
   return (
     <form onSubmit={createItem}>
-      <input value={name} onChange={({target}) => setName(target.value)}/>
-      <input value={price} onChange={({target}) => setPrice(target.value)}/>
-      <input value={clothingType} onChange={({target}) => setClothingType(target.value)}/>
+      Listing Name:<input value={name} onChange={({target}) => setName(target.value)} required/>
+      Price: <input value={price} onChange={({target}) => setPrice(target.value)} required/>
+      Clothing Type: 
+      <select 
+        value={clothingType}
+        onChange={({target}) => setClothingType(target.value)}
+        required>
+        <option value='Tanktop'>Tanktop</option>
+        <option value='Shirt'>Shirt</option>
+        <option value='Sweater'>Sweater</option>
+        <option value='Dress'>Dress</option>
+        <option value='Pants'>Pants</option>
+        <option value='Socks'>Socks</option>
+        <option value='Hat'>Hat</option>
+        <option value='Shoes'>Shoes</option>
+        <option value='Jacket'>Jacket</option>
+      </select>
       {/**Add images */}
       <input type='submit' value='Post Item Listing'/>
     </form>

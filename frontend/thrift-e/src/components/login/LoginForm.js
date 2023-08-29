@@ -38,6 +38,7 @@ const LoginForm = ({setUser}) => {
         console.log(err)
         })
       } else {
+        //Update for when its not validate, msg
         console.log('NOPE')
       }
     }
@@ -74,11 +75,11 @@ const LoginForm = ({setUser}) => {
     <>
       <h1>{newUser ? 'Register' : 'Sign in'}</h1>
       <form onSubmit={handleSubmit}>
-        Username:<input value={username} onChange={({target}) => setUsername(target.value)}/>
-        Password: <input type='password' value={password} onChange={({target}) => setPassword(target.value)}/>
+        Username:<input value={username} onChange={({target}) => setUsername(target.value)} required/>
+        Password: <input type='password' value={password} onChange={({target}) => setPassword(target.value)} required/>
         { newUser && 
           <div>
-            Confirm Password: <input type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)}/>
+            Confirm Password: <input type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
           </div>
         }
         <input type='submit' value={ newUser ? 'Register' : 'Sign in'}/>
