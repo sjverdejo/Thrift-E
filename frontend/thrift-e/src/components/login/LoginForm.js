@@ -8,6 +8,7 @@ const LoginForm = ({setUser}) => {
   const [password, setPassword] = useState('')
   const [secondPassword, setSecondPassword] = useState('')
   const [newUser, setNewUser] = useState(false)
+  const [showRules, setShowRules] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -16,7 +17,7 @@ const LoginForm = ({setUser}) => {
       username: username,
       password: password
     }
-
+    
     if (!newUser) {
       loginAPI.login(user)
       .then(res => {
@@ -28,7 +29,7 @@ const LoginForm = ({setUser}) => {
         console.log(err)
       })
     } else {
-      if (validatePassword(password, secondPassword)) {
+      if (confirmPassword(password, secondPassword) && validateUsername(username) && !hasSpaces(password)) {
         loginAPI.register(user)
           .then(res => {
             console.log(res)
@@ -43,12 +44,32 @@ const LoginForm = ({setUser}) => {
     }
   }
 
-  const validatePassword = (pass1, pass2) => {
+  const confirmPassword = (pass1, pass2) => {
     if (pass1 === pass2) {
       return true
     } else {
       return false
     }
+  }
+
+  const hasSpaces = (inputGiven) => {
+    return inputGiven.includes(' ')
+  }
+
+  const validateUsername = (username) => {
+    return(/^[a-z0-9]+$/i).test(username)
+  }
+
+  const rules = () => {
+    return (
+      <div>
+        <ul>
+          <li>Case-sensitive username and password</li>
+          <li>No whitespaces</li>
+          <li>No symbols</li>
+        </ul>
+      </div>
+    )
   }
   return (
     <>
