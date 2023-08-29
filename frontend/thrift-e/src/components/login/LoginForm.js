@@ -6,6 +6,7 @@ const LoginForm = ({setUser}) => {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [secondPassword, setSecondPassword] = useState('')
   const [newUser, setNewUser] = useState(false)
 
   const handleSubmit = (e) => {
@@ -27,14 +28,26 @@ const LoginForm = ({setUser}) => {
         console.log(err)
       })
     } else {
-      loginAPI.register(user)
-      .then(res => {
-        console.log(res)
-        setNewUser(false)
-      })
-      .catch(err => {
+      if (validatePassword(password, secondPassword)) {
+        loginAPI.register(user)
+          .then(res => {
+            console.log(res)
+            setNewUser(false)
+          })
+        .catch(err => {
         console.log(err)
-      })
+        })
+      } else {
+        console.log('NOPE')
+      }
+    }
+  }
+
+  const validatePassword = (pass1, pass2) => {
+    if (pass1 === pass2) {
+      return true
+    } else {
+      return false
     }
   }
   return (
@@ -42,12 +55,12 @@ const LoginForm = ({setUser}) => {
       <h1>{newUser ? 'Register' : 'Sign in'}</h1>
       <form onSubmit={handleSubmit}>
         Username:<input value={username} onChange={({target}) => setUsername(target.value)}/>
-        Password: <input value={password} onChange={({target}) => setPassword(target.value)}/>
-        {/* 
-          Add image upload for register
-          add second password to match first 
-          Add guidelines 
-        */}
+        Password: <input type='password' value={password} onChange={({target}) => setPassword(target.value)}/>
+        { newUser && 
+          <div>
+            Confirm Password: <input type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)}/>
+          </div>
+        }
         <input type='submit' value='submit'/>
       </form>
       <button onClick={() => setNewUser(!newUser)}>{newUser ? 'Already have a profile? Click here.' : 'Not Registered Click here.' }</button>
