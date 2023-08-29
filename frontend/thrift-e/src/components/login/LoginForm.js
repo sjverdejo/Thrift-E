@@ -8,7 +8,6 @@ const LoginForm = ({setUser}) => {
   const [password, setPassword] = useState('')
   const [secondPassword, setSecondPassword] = useState('')
   const [newUser, setNewUser] = useState(false)
-  const [showRules, setShowRules] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -17,7 +16,7 @@ const LoginForm = ({setUser}) => {
       username: username,
       password: password
     }
-    
+
     if (!newUser) {
       loginAPI.login(user)
       .then(res => {
@@ -65,8 +64,8 @@ const LoginForm = ({setUser}) => {
       <div>
         <ul>
           <li>Case-sensitive username and password</li>
-          <li>No whitespaces</li>
-          <li>No symbols</li>
+          <li>No whitespaces for username or password</li>
+          <li>No non alpha numberic characters for username</li>
         </ul>
       </div>
     )
@@ -82,9 +81,10 @@ const LoginForm = ({setUser}) => {
             Confirm Password: <input type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)}/>
           </div>
         }
-        <input type='submit' value='submit'/>
+        <input type='submit' value={ newUser ? 'Register' : 'Sign in'}/>
       </form>
       <button onClick={() => setNewUser(!newUser)}>{newUser ? 'Already have a profile? Click here.' : 'Not Registered Click here.' }</button>
+      {newUser && rules()}
     </>
   )
 }
