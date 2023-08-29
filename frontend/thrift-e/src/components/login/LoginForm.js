@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import loginAPI from '../../services/login'
 
 const LoginForm = ({setUser}) => {
@@ -71,6 +71,7 @@ const LoginForm = ({setUser}) => {
       </div>
     )
   }
+
   return (
     <>
       <h1>{newUser ? 'Register' : 'Sign in'}</h1>

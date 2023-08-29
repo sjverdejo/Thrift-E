@@ -4,6 +4,7 @@ import LandingPage from './routes/LandingPage'
 import itemAPI from './services/items'
 import loginAPI from './services/login'
 import Logout from './components/login/Logout'
+import Navbar from './components/navigation/Navbar'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -35,14 +36,10 @@ const App = () => {
 
   return (
     <>
-      Nav Bar
-      {!user && <LandingPage setUser={setUser}/>} 
-      {user && <Link to='/listings'>All Items</Link>}
-      {user && <Link to='/create'>Create new</Link>}
+      <Navbar user={user}/>
+      {!user && <LandingPage setUser={setUser}/>}
       {user && <Outlet context={{user, setUser, allItems, setItems, setMessage}}/>}
       <h4>{message}</h4>
-      {user && <Logout setUser={setUser}/> }
-      <Link to='/home'>Home</Link>
     </>
   )
 }
