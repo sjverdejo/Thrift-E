@@ -1,4 +1,4 @@
-import { Link, useOutletContext, useNavigate, useParams } from 'react-router-dom'
+import { useOutletContext, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import usersAPI from '../services/users'
 import Void from '../assets/void.png'
@@ -33,7 +33,6 @@ const UserPage = () => {
     return (
       <div>
           <h1>{profile.username}</h1>
-          {/* Change to image if available */}
           {profile.profilePicture ? <img src={process.env.REACT_APP_S3 + profile.profilePicture} alt='profile pic' width={100} /> : <img src={Void} alt='No img' width={100}/>}
           <h2>{profile.dateCreated}</h2>
           <button onClick={()=> {setShowItems(!showItems); setShowHistory(false)}}>Show Items</button>

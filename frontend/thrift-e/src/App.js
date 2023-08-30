@@ -40,7 +40,7 @@ const App = () => {
       {!user && <LandingPage setUser={setUser}/>}
       {user && <Outlet context={{user, setUser, allItems, setItems, setMessage}}/>}
       <h4>{message}</h4>
-      <Logout setUser={setUser}/>
+      {user && <Logout setUser={setUser}/>}
     </>
   )
 }
