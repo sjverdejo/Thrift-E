@@ -30,7 +30,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
         console.log(err)
       })
     } else {
-      if (confirmPassword(password, secondPassword) && validateUsername(username) && !hasSpaces(password) && checkSize(username, password)) {
+      if (confirmPassword(password, secondPassword) && validateUsername(username) && !hasSpaces(password) && !checkSize(username, password)) {
         userFormData.append('file', profileImage[0])
         
         loginAPI.register(userFormData)
@@ -65,7 +65,11 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   const checkSize = (username, password) => {
-    return username > 4 && password > 6
+    if (username < 4 || password < 6) {
+      return true
+    } else {
+      return false
+    }
   }
   const hasSpaces = (inputGiven) => {
     return inputGiven.includes(' ')
@@ -86,7 +90,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
         <ul>
           <li>Case-sensitive username and password</li>
           <li>No whitespaces for username or password</li>
-          <li>No non alpha numberic characters for username</li>
+          <li>No non alpha-numeric characters for username</li>
           <li>Username must be 4 characters long</li>
           <li>Password must be 6 characters long</li>
           {/*Add rules for images*/}
