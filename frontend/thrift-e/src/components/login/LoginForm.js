@@ -37,13 +37,15 @@ const LoginForm = ({setUser, setAlertMessage}) => {
           .then(res => {
             console.log(res)
             setNewUser(false)
+            setAlertMessage('Account created successfully!')
           })
-        .catch(err => {
-        console.log(err)
-        })
+          .catch(err => {
+            console.log(err)
+            setAlertMessage('Something went wrong! Try again later.')
+          })
       } else {
         //Update for when its not validate, msg
-        console.log('NOPE')
+        setAlertMessage('Username and Password does not follow rules.')
       }
     }
 
