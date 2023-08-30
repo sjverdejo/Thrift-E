@@ -6,7 +6,7 @@ import Items from '../components/items/Items'
 import Transactions from '../components/checkout/Transactions'
 
 const UserPage = () => {
-  const { user, setMessage, setShowAlert } = useOutletContext()
+  const { user, setAlertMessage } = useOutletContext()
   const navigate = useNavigate()
   const { id } = useParams()
   const [profile, setProfile] = useState(null)
@@ -17,11 +17,10 @@ const UserPage = () => {
   useEffect(()=> {
     usersAPI.getUser(id)
       .then(res => {
-        console.log('res', res)
         setProfile(res)
       })
       .catch (err => {
-        console.log('Error here')
+        setAlertMessage('Could not find user.')
         navigate('/')
       })
 

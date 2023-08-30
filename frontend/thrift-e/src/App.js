@@ -27,10 +27,8 @@ const App = () => {
       .checkLoggedIn()
       .then(res => {
         if (res.loggedIn) {
-          console.log(res.user)
           setUser(res.user)
         } else {
-          console.log(res.message)
           setUser(null)
         }
       })

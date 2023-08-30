@@ -20,7 +20,7 @@ const CheckoutPage = () => {
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret))
       .catch((err) => {
-        console.log(err)
+        setAlertMessage('Something went wrong.')
         navigate('/')
       })
 

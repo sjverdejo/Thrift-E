@@ -5,7 +5,6 @@ axios.defaults.withCredentials = true
 
 const getUser = async (id) => {
   const req = await axios.get(`${baseUrl}/api/users/${id}`)
-
   return req.data
 }
 

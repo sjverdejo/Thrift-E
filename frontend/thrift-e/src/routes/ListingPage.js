@@ -28,7 +28,7 @@ const ListingPage = () => {
       </div>
     )
   } else {
-    console.log('No item')
+    setAlertMessage('Item does not exist.')
     navigate('/')
   }
 }

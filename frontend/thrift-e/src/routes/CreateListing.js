@@ -1,4 +1,3 @@
-import ItemsAPI from '../services/items'
 import NewListing from '../components/items/NewListing.js'
 
 const CreateListing = () => {
