@@ -1,17 +1,17 @@
-import loginAPI from '../../services/login'
 import { useNavigate } from 'react-router-dom'
-const Logout = ({setUser}) => {
+import loginAPI from '../../services/login'
+
+const Logout = ({setUser, setAlertMessage}) => {
   const navigate = useNavigate()
   const logOut = () => {
     loginAPI.logout()
       .then(res => {
-        console.log(res)
-        //Set user to null maybe
+        setAlertMessage('Signed out successfully.')
         setUser(null)
         navigate('/')
       })
       .catch(err => {
-        console.log(err)
+        setAlertMessage('Error signing out.')
       })
   }
 

@@ -53,7 +53,7 @@ const App = () => {
       {/* setMessage={setMessage} setShowAlert={setShowAlert} */}
       {user && <Outlet context={{user, setUser, allItems, setItems, setMessage, setShowAlert}}/>}
       {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
-      {user && <Logout setUser={setUser}/>}
+      {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
     </>
   )
 }

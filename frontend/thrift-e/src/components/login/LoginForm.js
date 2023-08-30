@@ -80,10 +80,8 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   const imageChange = (e) => {
-    
-
     if (hasSpaces(e.target.files[0].name)) {
-      setAlertMessage('File name cannot contain spaces')
+      setAlertMessage('Image name can not contain spaces')
       return
     } else {
       setProfilePicture(e.target.value)
@@ -97,11 +95,10 @@ const LoginForm = ({setUser, setAlertMessage}) => {
         <ul>
           <li>Case-sensitive username and password</li>
           <li>No whitespaces for username or password</li>
-          <li>No non alpha-numeric characters for username</li>
+          <li>No non-alphanumeric characters for username</li>
           <li>Username must be 4 characters long</li>
           <li>Password must be 6 characters long</li>
           <li>Image name can not contain white spaces</li>
-          {/*Add rules for images*/}
         </ul>
       </div>
     )
