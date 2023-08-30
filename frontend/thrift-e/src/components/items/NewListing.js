@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import itemsAPI from '../../services/items'
 
 const NewListing = () => {
+  const navigate = useNavigate()
+  const { setAlertMessage } = useOutletContext()
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [clothingType, setClothingType] = useState('Tanktop')
@@ -11,7 +14,7 @@ const NewListing = () => {
 
     if (!validPrice(price)) {
       //update msg
-      console.log('NO')
+      setAlertMessage('Price invalid!')
       return
     }
     //update msg
@@ -23,11 +26,11 @@ const NewListing = () => {
 
       itemsAPI.postNewItem(newItem)
         .then(res => {
-          //redirect to profile
-          console.log('here')
+          setAlertMessage('Listing created successfully!')
+          navigate('/')
         })
         .catch(err => {
-          console.log(err)
+          setAlertMessage('Listing failed to be created!')
         })
   }
   
