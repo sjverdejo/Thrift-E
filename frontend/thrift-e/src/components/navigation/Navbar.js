@@ -4,7 +4,7 @@ const Navbar = ({user}) => {
     return (
       <div>
         <ul>
-          <li><Link to='/home'>Home</Link></li>
+          <li><Link to='/'>Home</Link></li>
           <li><Link to='/listings'>All Listings</Link></li>
           <li><Link to={`user/${user.user._id}`}>My Profile</Link></li>
           <li><Link to='/create'>Sell</Link></li>

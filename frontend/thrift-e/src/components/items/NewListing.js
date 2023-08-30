@@ -8,30 +8,36 @@ const NewListing = () => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [clothingType, setClothingType] = useState('Tanktop')
+  const [images, setImages] = useState([])
+  const [imgC, setImgC] = useState('')
 
   const createItem = (e) => {
     e.preventDefault()
 
     if (!validPrice(price)) {
-      //update msg
       setAlertMessage('Price invalid!')
       return
     }
-    //update msg
-      const newItem = {
-        name: name,
-        price: price,
-        clothingType: clothingType
-      }
 
-      itemsAPI.postNewItem(newItem)
-        .then(res => {
-          setAlertMessage('Listing created successfully!')
-          navigate('/')
-        })
-        .catch(err => {
-          setAlertMessage('Listing failed to be created!')
-        })
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('price', price)
+    formData.append('clothingType', clothingType)
+    
+    if (images.length > 0) {
+      for (let i in images) {
+        formData.append('files', images[i])
+      }
+    }
+
+    itemsAPI.postNewItem(formData)
+      .then(res => {
+        setAlertMessage('Listing created successfully!')
+        navigate('/')
+      })
+      .catch(err => {
+        setAlertMessage('Listing failed to be created!')
+      })
   }
   
   const validPrice = (p) => {
@@ -42,8 +48,22 @@ const NewListing = () => {
     }
   }
   
+  const imageHandler = (e) => {
+    setImages([])
+    setImgC('')
+    for (const file of e.target.files) {
+      if (file.name.includes(' ')) {
+        setAlertMessage('Image file name can not contain, please try again.')
+        return
+      } 
+    }
+
+    setImgC(e.target.value)
+    setImages(e.target.files)
+  }
+
   return (
-    <form onSubmit={createItem}>
+    <form onSubmit={createItem} encType='multipart/form-data'>
       Listing Name:<input value={name} onChange={({target}) => setName(target.value)} required/>
       Price: <input value={price} onChange={({target}) => setPrice(target.value)} required/>
       Clothing Type: 
@@ -61,7 +81,7 @@ const NewListing = () => {
         <option value='Shoes'>Shoes</option>
         <option value='Jacket'>Jacket</option>
       </select>
-      {/**Add images */}
+      <input type='file' value={imgC} onChange={(imageHandler)} accept='image/*' multiple/>
       <input type='submit' value='Post Item Listing'/>
     </form>
   )

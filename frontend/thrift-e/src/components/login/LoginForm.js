@@ -24,7 +24,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
         console.log(res)
         setAlertMessage('Successfully signed in!')
         setUser(res)
-        navigate('/home')
+        navigate('/')
       })
       .catch(err => {
         setAlertMessage('Error signing in!')
