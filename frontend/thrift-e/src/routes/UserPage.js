@@ -6,7 +6,7 @@ import Items from '../components/items/Items'
 import Transactions from '../components/checkout/Transactions'
 
 const UserPage = () => {
-  const { user } = useOutletContext()
+  const { user, setMessage, setShowAlert } = useOutletContext()
   const navigate = useNavigate()
   const { id } = useParams()
   const [profile, setProfile] = useState(null)

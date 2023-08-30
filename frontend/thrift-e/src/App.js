@@ -1,15 +1,27 @@
 import { useState, useEffect } from 'react'
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import LandingPage from './routes/LandingPage'
 import itemAPI from './services/items'
 import loginAPI from './services/login'
 import Navbar from './components/navigation/Navbar'
 import Logout from './components/login/Logout'
+import AlertMessage from './components/alert/AlertMessage'
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [allItems, setItems] = useState([])
-  const [message, setMessage] = useState('Here')
+  const [message, setMessage] = useState('')
+  const [showAlert, setShowAlert] = useState(false)
+
+  const setAlertMessage = (message) => {
+    setMessage(message)
+    setShowAlert(true)
+    setTimeout(() => {
+      setMessage('')
+      setShowAlert(false)
+    }, 5000)
+  }
+
   useEffect(() => {
     loginAPI
       .checkLoggedIn()
@@ -37,9 +49,10 @@ const App = () => {
   return (
     <>
       <Navbar user={user}/>
-      {!user && <LandingPage setUser={setUser}/>}
-      {user && <Outlet context={{user, setUser, allItems, setItems, setMessage}}/>}
-      <h4>{message}</h4>
+      {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
+      {/* setMessage={setMessage} setShowAlert={setShowAlert} */}
+      {user && <Outlet context={{user, setUser, allItems, setItems, setMessage, setShowAlert}}/>}
+      {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
       {user && <Logout setUser={setUser}/>}
     </>
   )

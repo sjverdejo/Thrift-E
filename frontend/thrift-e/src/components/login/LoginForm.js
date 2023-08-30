@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import loginAPI from '../../services/login'
 
-const LoginForm = ({setUser}) => {
+const LoginForm = ({setUser, setAlertMessage}) => {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -26,6 +26,7 @@ const LoginForm = ({setUser}) => {
         navigate('/home')
       })
       .catch(err => {
+        setAlertMessage('Error signing in.')
         console.log(err)
       })
     } else {
