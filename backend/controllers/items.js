@@ -61,7 +61,7 @@ itemsRouter.post('/', async (req, res) => {
       const allFiles = req.files.files
       if (Array.isArray(req.files.files)) {
         await Promise.all(allFiles.map(async (file) => {
-          const imageName = user.username + '/items/' + file.name
+          const imageName = user.username + '/items/' + name.replace(' ', '') + '/' + file.name
           const bucketParams = {
             Bucket: config.AWS_S3_BUCKET_NAME,
             Key: imageName,
@@ -77,7 +77,7 @@ itemsRouter.post('/', async (req, res) => {
           item.itemImages = item.itemImages.concat(imageName)
         }))
       } else {
-        const imageName = user.username + '/items/' + allFiles.name
+        const imageName = user.username + '/items/' + name.replace(' ', '') + '/' + allFiles.name
         const bucketParams = {
           Bucket: config.AWS_S3_BUCKET_NAME,
           Key: imageName,
