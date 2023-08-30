@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import {
   PaymentElement,
@@ -11,7 +11,7 @@ const CheckoutForm = () => {
   const elements = useElements()
   const navigate = useNavigate()
 
-  const { item, setMessage } = useOutletContext()
+  const { item, setAlertMessage } = useOutletContext()
 
   useEffect(() => {
     if (!stripe) {
@@ -29,16 +29,14 @@ const CheckoutForm = () => {
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       switch (paymentIntent.status) {
         case 'succeeded':
-          console.log('Succeed')
-          console.log(paymentIntent)
-          setMessage('Payment Successful!')
+          setAlertMessage('Payment Successful!')
           navigate('/home')
           break
         case 'processing':
-          setMessage('Payment processing')
+          setAlertMessage('Payment processing')
           break
         default:
-          setMessage('Something went wrong.')
+          setAlertMessage('Something went wrong.')
           break
       }
     })
@@ -63,15 +61,21 @@ const CheckoutForm = () => {
     })
 
     if (error.type === 'card_error' || error.type === 'validation_error') {
-      console.log('error message')
+      setAlertMessage('Something went wrong! Try again later!')
     } else {
-      console.log('unexpected')
+      setAlertMessage('Unexpected Error!')
     }
   }
+
+  const cancelPayment = () => {
+    navigate('/listings')
+  }
+
   return (
     <form id='payment-form' onSubmit={submitPayment}>
       <PaymentElement id='payment-element' options={paymentElementOptions} />
       <button type='submit'>Pay</button>
+      <button onClick={cancelPayment}>Cancel</button>
     </form>
   )
 }

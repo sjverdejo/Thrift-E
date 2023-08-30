@@ -51,7 +51,7 @@ const App = () => {
       <Navbar user={user}/>
       {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
       {/* setMessage={setMessage} setShowAlert={setShowAlert} */}
-      {user && <Outlet context={{user, setUser, allItems, setItems, setMessage, setShowAlert}}/>}
+      {user && <Outlet context={{user, setUser, allItems, setItems, setAlertMessage}}/>}
       {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
       {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
     </>

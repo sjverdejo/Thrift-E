@@ -8,7 +8,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHKEY)
 
 const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState('')
-  const { item, user, setMessage } = useOutletContext()
+  const { item, user, setAlertMessage } = useOutletContext()
   const navigate = useNavigate()
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import Item from '../components/items/Item'
 
 const ListingPage = () => {
   const { id } = useParams()
-  const { user, allItems, setMessage } = useOutletContext()
+  const { user, allItems, setAlertMessage } = useOutletContext()
   const item = allItems.find(i => i._id === id)
   
   const navigate = useNavigate()
@@ -22,14 +22,14 @@ const ListingPage = () => {
           <Link to='./checkout'>
             <button>Buy</button>
           </Link>
-          <Outlet context={{item, user, setMessage}}/>
+          <Outlet context={{item, user, setAlertMessage}}/>
           </div>
         )}
       </div>
     )
   } else {
     console.log('No item')
-    navigate('/home')
+    navigate('/')
   }
 }
 
