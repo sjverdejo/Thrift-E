@@ -22,29 +22,29 @@ const LoginForm = ({setUser, setAlertMessage}) => {
       loginAPI.login(userFormData)
       .then(res => {
         console.log(res)
+        setAlertMessage('Successfully signed in!')
         setUser(res)
         navigate('/home')
       })
       .catch(err => {
-        setAlertMessage('Error signing in.')
-        console.log(err)
+        setAlertMessage('Error signing in!')
       })
     } else {
       if (confirmPassword(password, secondPassword) && validateUsername(username) && !hasSpaces(password) && !checkSize(username, password)) {
-        userFormData.append('file', profileImage[0])
+        
+        if (profileImage) {
+          userFormData.append('file', profileImage[0])
+        }
         
         loginAPI.register(userFormData)
           .then(res => {
-            console.log(res)
             setNewUser(false)
             setAlertMessage('Account created successfully!')
           })
           .catch(err => {
-            console.log(err)
             setAlertMessage('Something went wrong! Try again later.')
           })
       } else {
-        //Update for when its not validate, msg
         setAlertMessage('Username and Password does not follow rules.')
       }
     }
@@ -80,8 +80,15 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   const imageChange = (e) => {
-    setProfilePicture(e.target.value)
-    setProfileImage([...profileImage, e.target.files[0]])
+    
+
+    if (hasSpaces(e.target.files[0].name)) {
+      setAlertMessage('File name cannot contain spaces')
+      return
+    } else {
+      setProfilePicture(e.target.value)
+      setProfileImage([...profileImage, e.target.files[0]])
+    }
   }
 
   const rules = () => {
@@ -93,6 +100,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
           <li>No non alpha-numeric characters for username</li>
           <li>Username must be 4 characters long</li>
           <li>Password must be 6 characters long</li>
+          <li>Image name can not contain white spaces</li>
           {/*Add rules for images*/}
         </ul>
       </div>
@@ -108,7 +116,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
         { newUser && 
           <div>
             Confirm Password: <input type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
-            Profile Picture: <input type='file' value={profilePicture} onChange={imageChange}/>
+            Profile Picture: <input type='file' value={profilePicture} onChange={imageChange} accept='image/*'/>
           </div>
         }
         <input type='submit' value={ newUser ? 'Register' : 'Sign in'}/>
