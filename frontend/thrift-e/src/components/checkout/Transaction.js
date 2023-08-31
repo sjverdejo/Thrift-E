@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
+import helper from '../../helper'
 
 const Transaction = ({transaction, isSeller}) => {
   const seller = () => {
     return (
       <div>
-        <h2>Date Sold: {transaction.datePurchased}</h2>
-        <h3>{transaction.item.seller}</h3>
+        <h4>Date Sold: {helper.convertDate(transaction.datePurchased)}</h4>
         <Link to={`/user/${transaction.buyer}`}><button>View Buyer Profile</button></Link>
       </div>
     )
@@ -14,7 +14,7 @@ const Transaction = ({transaction, isSeller}) => {
   const buyer = () => {
     return (
       <div>
-        <h2>Date Purchased: {transaction.datePurchased}</h2>
+        <h4>Date Purchased: {helper.convertDate(transaction.datePurchased)}</h4>
         <Link to={`/user/${transaction.item.seller}`}><button>View Seller Profile</button></Link>
       </div>
     )
