@@ -5,6 +5,7 @@ import Void from '../assets/void.png'
 import Items from '../components/items/Items'
 import Transactions from '../components/checkout/Transactions'
 import UpdateUserForm from '../components/user/UpdateUserForm'
+import helper from '../helper'
 
 const UserPage = () => {
   const { user, setAlertMessage } = useOutletContext()
@@ -30,7 +31,6 @@ const UserPage = () => {
 
   const profilePage = () => {
     const transactions = profile.transactions
-    
     return (
       <div>
           <h1>{profile.username}</h1>
@@ -41,7 +41,7 @@ const UserPage = () => {
               {showUpdate && <UpdateUserForm profile={profile} setAlertMessage={setAlertMessage} setShowUpdate={setShowUpdate}/>}
             </div>
           }
-          <h2>{profile.dateCreated}</h2>
+          <h2>Account Created:  {helper.convertDate(profile.dateCreated)}</h2>
           <button onClick={()=> {setShowItems(!showItems); setShowHistory(false); setShowUpdate(false)}}>Show Items</button>
           {user.user._id === profile._id && <button onClick={()=> {setShowHistory(!showHistory); setShowItems(false); setShowUpdate(false)}}>Show Transactions</button>}
           <div id='forItems'>
