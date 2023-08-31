@@ -100,13 +100,15 @@ usersRouter.get('/:id', async (req, res) => {
 })
 
 //PUT route to update profile picture
-usersRouter.put('/', async (req, res) => {
+usersRouter.put('/:id', async (req, res) => {
+  const id = req.params.id
+
   if (req.session.authenticated) {
-    const updateUser = await User.findById(req.session.user._id)
+    const updateUser = await User.findById(id)
 
     if (updateUser) {
       if (req.files) {
-        const fileName = updateUser.username + '/' + req.files.file.name
+        const fileName = updateUser.username + '/profilepicture/' + req.files.file.name
         const bucketParams = {
           Bucket: config.AWS_S3_BUCKET_NAME,
           Key: fileName,
@@ -115,7 +117,7 @@ usersRouter.put('/', async (req, res) => {
 
         try {
           //if a user profile picture exists already, delete it
-          if (updateUser.profilePicture !== 'void.png') {
+          if (updateUser.profilePicture) {
             const toDeleteBucketParams = {
               Bucket: config.AWS_S3_BUCKET_NAME,
               Key: updateUser.profilePicture
@@ -139,7 +141,7 @@ usersRouter.put('/', async (req, res) => {
         return
       }
     } else {
-      res.status(401).json({ message: 'Not Authenticated.'})
+      res.status(401).json({ message: 'Not Found.'})
     }
   } else {
     res.status(401).json({ message: 'Not Authenticated.'})
@@ -147,10 +149,11 @@ usersRouter.put('/', async (req, res) => {
 })
 
 //DELETE route to remove profile picture
-usersRouter.delete('/', async (req, res) => {
+usersRouter.delete('/:id', async (req, res) => {
+  const id = req.params.id
 
   if (req.session.authenticated) {
-    const user = await User.findById(req.session.user._id)
+    const user = await User.findById(id)
 
     if (user) {
       const bucketParams = {
@@ -160,7 +163,7 @@ usersRouter.delete('/', async (req, res) => {
 
       try {
         await s3Client.send(new DeleteObjectCommand(bucketParams))
-        user.profilePicture = 'void.png'
+        user.profilePicture = ''
         await user.save()
         res.json({message: 'Deleted image successfully'})
       } catch (err) {

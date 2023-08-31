@@ -4,6 +4,7 @@ import usersAPI from '../services/users'
 import Void from '../assets/void.png'
 import Items from '../components/items/Items'
 import Transactions from '../components/checkout/Transactions'
+import UpdateUserForm from '../components/user/UpdateUserForm'
 
 const UserPage = () => {
   const { user, setAlertMessage } = useOutletContext()
@@ -13,7 +14,8 @@ const UserPage = () => {
   const [showHistory, setShowHistory] = useState(false)
   const [showItems, setShowItems] = useState(false)
   const [showSold, setShowSold] = useState(false)
-  
+  const [showUpdate, setShowUpdate] = useState(false)
+
   useEffect(()=> {
     usersAPI.getUser(id)
       .then(res => {
@@ -26,16 +28,22 @@ const UserPage = () => {
 
   }, [user, id])
 
-
   const profilePage = () => {
     const transactions = profile.transactions
+    
     return (
       <div>
           <h1>{profile.username}</h1>
           {profile.profilePicture ? <img src={process.env.REACT_APP_S3 + profile.profilePicture} alt='profile pic' width={100} /> : <img src={Void} alt='No img' width={100}/>}
+          {user.user._id === profile._id && 
+            <div>
+              <button onClick={() => setShowUpdate(!showUpdate)}>Update Profile Picture</button>
+              {showUpdate && <UpdateUserForm profile={profile} setAlertMessage={setAlertMessage} setShowUpdate={setShowUpdate}/>}
+            </div>
+          }
           <h2>{profile.dateCreated}</h2>
-          <button onClick={()=> {setShowItems(!showItems); setShowHistory(false)}}>Show Items</button>
-          <button onClick={()=> {setShowHistory(!showHistory); setShowItems(false)}}>Show Transactions</button>
+          <button onClick={()=> {setShowItems(!showItems); setShowHistory(false); setShowUpdate(false)}}>Show Items</button>
+          {user.user._id === profile._id && <button onClick={()=> {setShowHistory(!showHistory); setShowItems(false); setShowUpdate(false)}}>Show Transactions</button>}
           <div id='forItems'>
             {(showItems && profile.items) &&
               <div>
@@ -46,7 +54,6 @@ const UserPage = () => {
           </div>
           {user.user._id === profile._id &&
             <div id='forTransactions'>
-            
               {(showHistory && transactions) &&
                 (
                 <div>

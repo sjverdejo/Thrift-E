@@ -6,7 +6,7 @@ const Items = ({items}) => {
     items.map(i => (
       <div key={i._id}>
         <Item item={i} />
-        {i.itemImages.length !== 0 ? <img src={process.env.REACT_APP_S3 + i.itemImages[0]} width={50} /> : <img src={Void} width={50} />}
+        {i.itemImages.length !== 0 ? <img src={process.env.REACT_APP_S3 + i.itemImages[0]} width={50} alt='Item' /> : <img src={Void} width={50} alt='nothing provided'/>}
         <Link to={`/listing/${i._id}`}>View Listing</Link>
       </div>
     ))

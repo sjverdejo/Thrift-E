@@ -8,4 +8,14 @@ const getUser = async (id) => {
   return req.data
 }
 
-export default { getUser }
+const updateUser = async (id, updatedUser) => {
+  const req = await axios.put(`${baseUrl}/api/users/${id}`, updatedUser)
+  return req.data
+}
+
+const deleteUser = async (id) => {
+  const req = await axios.delete(`${baseUrl}/api/users/${id}`)
+  return req.data
+}
+
+export default { getUser, updateUser, deleteUser }

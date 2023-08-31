@@ -1,5 +1,3 @@
-import Void from '../../assets/void.png'
-
 const Item = ({item}) => {
   //create function to display all photos
   return (
