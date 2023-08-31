@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useOutletContext, Link, Outlet, useNavigate } from 'react-router-dom'
 import Item from '../components/items/Item'
 import Void from '../assets/void.png'
+import helper from '../helper'
+
 const ListingPage = () => {
   const { id } = useParams()
   const { user, allItems, setAlertMessage } = useOutletContext()
@@ -14,13 +16,14 @@ const ListingPage = () => {
       setMainImg(`${imgLink}${item.itemImages[0]}`)
     }
   }, [])
+
   const imgView = () => {
 
     return (
     <div>
-      <img src={mainImg} width={100} />
+      <img src={mainImg} width={100} alt='main'/>
       <div>
-        {item.itemImages.map(i => <img key={i} src={imgLink + i} width={50} onClick={() => setMainImg(`${imgLink}${i}`)}/>)}
+        {item.itemImages.map(i => <img key={i} src={imgLink + i} width={50} onClick={() => setMainImg(`${imgLink}${i}`)} alt='item'/>)}
       </div>
     </div>
     )
@@ -35,11 +38,12 @@ const ListingPage = () => {
         <Link to='/listings'>Back to listings</Link>
         {
           item.itemImages.length === 0
-            ? <img src={Void} width={50} alt='no image'/>
+            ? <img src={Void} width={50} alt='none provided'/>
             : imgView()
         }
         <Item item={item}/>
         <h3>Type: {item.clothingType}</h3>
+        <h4>Date Posted {helper.convertDate(item.datePosted)}</h4>
         <Link to={`/user/${item.seller}`}>Seller</Link>
         <br/>
         {isBuyer && 
@@ -53,9 +57,6 @@ const ListingPage = () => {
         )}
       </div>
     )
-  } else {
-    setAlertMessage('Item does not exist.')
-    navigate('/')
   }
 }
 
