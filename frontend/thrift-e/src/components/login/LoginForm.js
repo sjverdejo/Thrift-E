@@ -105,7 +105,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   return (
-    <>
+    <div className='flex justify-center'>
       <h1>{newUser ? 'Register' : 'Sign in'}</h1>
       <form onSubmit={handleSubmit} encType='multipart/form-data'>
         Username:<input value={username} onChange={({target}) => setUsername(target.value)} required/>
@@ -120,7 +120,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
       </form>
       <button onClick={() => setNewUser(!newUser)}>{newUser ? 'Already have a profile? Click here.' : 'Not Registered Click here.' }</button>
       {newUser && rules()}
-    </>
+    </div>
   )
 }
 

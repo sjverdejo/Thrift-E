@@ -1,3 +1,4 @@
+import './index.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
@@ -13,6 +14,7 @@ import LandingPage from './routes/LandingPage'
 import CreateListing from './routes/CreateListing'
 import ListingPage from './routes/ListingPage'
 import CheckoutPage from './routes/CheckoutPage'
+
 
 const router = createBrowserRouter([
   {
