@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useParams, useOutletContext, Link, Outlet, useNavigate } from 'react-router-dom'
+import { useParams, useOutletContext, Link, Outlet } from 'react-router-dom'
 import Item from '../components/items/Item'
+import UpdateListingForm from '../components/items/UpdateListingForm'
 import Void from '../assets/void.png'
 import helper from '../helper'
 
@@ -10,6 +11,7 @@ const ListingPage = () => {
   const item = allItems.find(i => i._id === id)
   const imgLink = process.env.REACT_APP_S3
   const [mainImg, setMainImg] = useState('')
+  const [updateForm, setUpdateForm] = useState(false)
 
   useEffect(() => {
     if (item && item.itemImages) {
@@ -28,7 +30,7 @@ const ListingPage = () => {
     </div>
     )
   }
-  const navigate = useNavigate()
+
   if (item) {
     const isBuyer = item.seller.toString() !== user.user._id && !item.isSold
 
@@ -49,11 +51,18 @@ const ListingPage = () => {
         {isBuyer && 
         ( 
           <div>
-          <Link to='./checkout'>
-            <button>Buy Item</button>
-          </Link>
-          <Outlet context={{item, user, setAlertMessage}}/>
+            <Link to='./checkout'>
+              <button>Buy Item</button>
+            </Link>
+            <Outlet context={{item, user, setAlertMessage}}/>
           </div>
+        )}
+        {!isBuyer && (
+          <div>
+            <button onClick={()=>setUpdateForm(!updateForm)}>Update</button>
+            {updateForm && <UpdateListingForm item={item} setAlertMessage={setAlertMessage}/>}
+          </div>
+        // )}
         )}
       </div>
     )
