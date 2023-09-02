@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useOutletContext, Link, Outlet } from 'react-router-dom'
 import Item from '../components/items/Item'
 import UpdateListingForm from '../components/items/UpdateListingForm'
+import EditImages from '../components/items/EditImages'
 import Void from '../assets/void.png'
 import helper from '../helper'
 
@@ -12,6 +13,7 @@ const ListingPage = () => {
   const imgLink = process.env.REACT_APP_S3
   const [mainImg, setMainImg] = useState('')
   const [updateForm, setUpdateForm] = useState(false)
+  const [editImgs, setEditImgs] = useState(false)
 
   useEffect(() => {
     if (item && item.itemImages) {
@@ -20,12 +22,12 @@ const ListingPage = () => {
   }, [])
 
   const imgView = () => {
-
     return (
     <div>
       <img src={mainImg} width={100} alt='main'/>
       <div>
-        {item.itemImages.map(i => <img key={i} src={imgLink + i} width={50} onClick={() => setMainImg(`${imgLink}${i}`)} alt='item'/>)}
+        {item.itemImages.map(i => 
+          <img key={i} src={imgLink + i} width={50} onClick={() => setMainImg(`${imgLink}${i}`)} alt='item'/>)}
       </div>
     </div>
     )
@@ -43,6 +45,12 @@ const ListingPage = () => {
             ? <img src={Void} width={50} alt='none provided'/>
             : imgView()
         }
+        {!isBuyer && (
+          <div>
+            <button onClick={()=>setEditImgs(!editImgs)}>Edit Images</button>
+            {editImgs && <EditImages item={item} setAlertMessage={setAlertMessage}/>}
+          </div>
+        )}
         <Item item={item}/>
         <h3>Type: {item.clothingType}</h3>
         <h4>Date Posted {helper.convertDate(item.datePosted)}</h4>
@@ -59,7 +67,7 @@ const ListingPage = () => {
         )}
         {!isBuyer && (
           <div>
-            <button onClick={()=>setUpdateForm(!updateForm)}>Update</button>
+            <button onClick={()=>setUpdateForm(!updateForm)}>Update Listing Info</button>
             {updateForm && <UpdateListingForm item={item} setAlertMessage={setAlertMessage}/>}
           </div>
         // )}

@@ -19,9 +19,19 @@ const updateItem = async (itemDetails, id) => {
   return req.data
 }
 
+const updateItemImage = async (itemImage, id) => {
+  const req = await axios.put(`${baseUrl}/api/items/${id}/images`, itemImage)
+  return req.data
+}
+
+const deleteItemImage = async (id) => {
+  const req = await axios.put(`${baseUrl}/api/items/${id}/images`)
+  return req.data
+}
+
 const deleteItem = async (id) => {
   const req = await axios.delete(`${baseUrl}/api/items/${id}`)
   return req.data
 }
 
-export default { getAllItems, postNewItem, updateItem, deleteItem }
+export default { getAllItems, postNewItem, updateItem, updateItemImage, deleteItemImage, deleteItem }

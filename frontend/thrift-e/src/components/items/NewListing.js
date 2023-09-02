@@ -81,7 +81,7 @@ const NewListing = () => {
         <option value='Shoes'>Shoes</option>
         <option value='Jacket'>Jacket</option>
       </select>
-      <input type='file' value={imgC} onChange={(imageHandler)} accept='image/*' multiple/>
+      <input type='file' value={imgC} onChange={imageHandler} accept='image/*' multiple/>
       <input type='submit' value='Post Item Listing'/>
     </form>
   )
