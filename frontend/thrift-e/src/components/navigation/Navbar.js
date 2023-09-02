@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+
 const Navbar = ({user}) => {
   if (user) {
     return (

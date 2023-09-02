@@ -105,14 +105,14 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   return (
-    <div className='flex justify-center'>
+    <div class='border'>
       <h1>{newUser ? 'Register' : 'Sign in'}</h1>
       <form onSubmit={handleSubmit} encType='multipart/form-data'>
-        Username:<input value={username} onChange={({target}) => setUsername(target.value)} required/>
-        Password: <input type='password' value={password} onChange={({target}) => setPassword(target.value)} required/>
+        Username:<input class='border' value={username} onChange={({target}) => setUsername(target.value)} required/>
+        Password: <input className='border' type='password' value={password} onChange={({target}) => setPassword(target.value)} required/>
         { newUser && 
           <div>
-            Confirm Password: <input type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
+            Confirm Password: <input class='border' type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
             Profile Picture: <input type='file' value={profilePicture} onChange={imageChange} accept='image/*'/>
           </div>
         }

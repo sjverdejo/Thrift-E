@@ -10,8 +10,8 @@ import AlertMessage from './components/alert/AlertMessage'
 const App = () => {
   const [user, setUser] = useState(null)
   const [allItems, setItems] = useState([])
-  const [message, setMessage] = useState('')
-  const [showAlert, setShowAlert] = useState(false)
+  const [message, setMessage] = useState('Test')
+  const [showAlert, setShowAlert] = useState(true)
 
   const setAlertMessage = (message) => {
     setMessage(message)
@@ -45,13 +45,13 @@ const App = () => {
   }, [user])
 
   return (
-    <>
+    <div class='h-screen bg-slate-800'>
       <Navbar user={user}/>
+      {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
       {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
       {user && <Outlet context={{user, setUser, allItems, setItems, setAlertMessage}}/>}
-      {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
       {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
-    </>
+    </div>
   )
 }
 
