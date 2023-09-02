@@ -16,8 +16,11 @@ const ListingPage = () => {
   const [editImgs, setEditImgs] = useState(false)
 
   useEffect(() => {
+    
     if (item && item.itemImages) {
       setMainImg(`${imgLink}${item.itemImages[0]}`)
+    } else {
+      setMainImg(Void)
     }
   }, [])
 

@@ -24,8 +24,8 @@ const updateItemImage = async (itemImage, id) => {
   return req.data
 }
 
-const deleteItemImage = async (id) => {
-  const req = await axios.put(`${baseUrl}/api/items/${id}/images`)
+const deleteItemImage = async (id, imageName) => {
+  const req = await axios.delete(`${baseUrl}/api/items/${id}/images/${imageName}`)
   return req.data
 }
 
