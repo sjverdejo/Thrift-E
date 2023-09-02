@@ -150,9 +150,8 @@ itemsRouter.put('/:id/images', async (req, res) => {
   if (req.session.authenticated) {
     const item = await Item.findById(id)
     if (item && item.seller.toString() === req.session.user._id) {
-      console.log('here')
       if (req.files) {
-        const imageName = req.session.user.username + '/items/' + req.files.files.name
+        const imageName = req.session.user.username + '/items/' + item.name.replace(' ', '') + '/' + req.files.files.name
         const bucketParams = {
           Bucket: config.AWS_S3_BUCKET_NAME,
           Key: imageName,
@@ -221,25 +220,27 @@ itemsRouter.delete('/:id', async (req, res) => {
 })
 
 //Delete image from itemImages array
-itemsRouter.delete('/:id/images', async (req, res) => {
+itemsRouter.delete('/:id/images/:imageName', async (req, res) => {
   const id = req.params.id
-  const { imageName } = req.body
+  const imageName = req.params.imageName
+
   if (req.session.authenticated) {
     const item = await Item.findById(id)
 
     if (item && (item.seller.toString() === req.session.user._id) && !item.isSold) {
+      const file = req.session.user.username + '/items/' + item.name + '/' + imageName
       const bucketParams = {
         Bucket: config.AWS_S3_BUCKET_NAME,
-        Key: imageName
+        Key: file
       }
 
       try {
         await s3Client.send(new DeleteObjectCommand(bucketParams))
-        item.itemImages = item.itemImages.filter((item) => item !== imageName)
+        item.itemImages = item.itemImages.filter((item) => item !== file)
         await item.save()
         res.json(item)
       } catch (err) {
-        console.log('Could not delete.', err)
+        console.log('Could not delete.', req.body)
         res.status(404).json({message: 'Could not delete image.'})
       }
     } else {
