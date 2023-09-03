@@ -91,8 +91,8 @@ const LoginForm = ({setUser, setAlertMessage}) => {
 
   const rules = () => {
     return (
-      <div>
-        <ul>
+      <div class='flex justify-center'>
+        <ul class='list-disc'>
           <li>Case-sensitive username and password</li>
           <li>No whitespaces for username or password</li>
           <li>No non-alphanumeric characters for username</li>
@@ -105,20 +105,31 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   return (
-    <div class='border'>
-      <h1>{newUser ? 'Register' : 'Sign in'}</h1>
+    <div class='w-1/2 p-10 border flex flex-col text-white rounded-xl shadow-xl bg-slate-800'>
+      <h1 class='pb-10 text-3xl text-center'>{newUser ? 'Register' : 'Sign in'}</h1>
       <form onSubmit={handleSubmit} encType='multipart/form-data'>
-        Username:<input class='border' value={username} onChange={({target}) => setUsername(target.value)} required/>
-        Password: <input className='border' type='password' value={password} onChange={({target}) => setPassword(target.value)} required/>
-        { newUser && 
-          <div>
-            Confirm Password: <input class='border' type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
-            Profile Picture: <input type='file' value={profilePicture} onChange={imageChange} accept='image/*'/>
+        <div class='flex flex-col items-center space-y-5'>
+          <div class='w-3/5'>
+            <label class='block text-xs text-slate-200'>Username: </label> <input class='rounded-md shadow-xl w-full' value={username} onChange={({target}) => setUsername(target.value)} required/>
           </div>
-        }
-        <input type='submit' value={ newUser ? 'Register' : 'Sign in'}/>
+          <div class='w-3/5'>
+            <label class='block text-xs text-slate-200'>Password</label> <input className='rounded-md shadow-xl w-full' type='password' value={password} onChange={({target}) => setPassword(target.value)} required/>
+          </div>
+          { newUser && 
+            <div class='w-full flex flex-col items-center space-y-5 justify-center'>
+              <div class='w-3/5'>
+                <label class='block text-xs text-slate-200'>Confirm Password: </label> <input class='rounded-md shadow-xl w-full' type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
+              </div>
+              <div>
+                <label class='block text-xs text-slate-200'>Profile Picture: </label><input class='w-full' type='file' value={profilePicture} onChange={imageChange} accept='image/*'/>
+              </div>
+            </div>
+          }
+          <input class='m-4 bg-red-600 text-white w-40 rounded-lg shadow-xl hover:bg-red-200 active:bg-red-600 p-2 text-white w-3/5' type='submit' value={ newUser ? 'Register' : 'Sign in'}/>
+        </div>
       </form>
-      <button onClick={() => setNewUser(!newUser)}>{newUser ? 'Already have a profile? Click here.' : 'Not Registered Click here.' }</button>
+      
+      <button class='text-xs text-slate-400 active:text-slate-600 p-5' onClick={() => setNewUser(!newUser)}>{newUser ? 'Already have a profile? Click here.' : 'Not Registered Click here.' }</button>
       {newUser && rules()}
     </div>
   )

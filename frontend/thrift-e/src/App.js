@@ -48,9 +48,11 @@ const App = () => {
     <div class='min-h-screen bg-neutral-300 font-mono '>
       <Navbar user={user}/>
       {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
-      {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
-      {user && <Outlet context={{user, setUser, allItems, setItems, setAlertMessage}}/>}
-      {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
+      <div class='pt-5'>
+        {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
+        {user && <Outlet context={{user, setUser, allItems, setItems, setAlertMessage}}/>}
+        {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
+      </div>
     </div>
   )
 }
