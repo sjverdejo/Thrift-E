@@ -45,7 +45,7 @@ const App = () => {
   }, [user])
 
   return (
-    <div class='h-screen bg-slate-800'>
+    <div class='min-h-screen bg-neutral-300 font-mono '>
       <Navbar user={user}/>
       {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
       {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
