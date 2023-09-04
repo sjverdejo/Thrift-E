@@ -6,7 +6,7 @@ const AllListingsPage = () => {
   const items = allItems.filter(i => !i.isSold)
   
   return (
-    <div class='grid grid-cols-4 place-items-center h-94 gap-2 m-2'>
+    <div class='grid grid-cols-4 place-items-center gap-1 m-2'>
         <Items items={items.filter(i => i.seller.toString() !== user.user._id)} />
     </div>
   )

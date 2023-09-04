@@ -25,7 +25,7 @@ const ListingPage = () => {
   const imgView = () => {
     return (
     <div class='flex flex-col items-center'>
-      <div class='h-96 w-11/12 flex justify-center'>
+      <div class='h-96 w-94 flex justify-center'>
         <img class='h-96 w-94' src={mainImg} alt='main'/>
       </div>
       <div class='flex flex-row h-16 w-16'>
@@ -77,7 +77,7 @@ const ListingPage = () => {
             )}
             {!isBuyer && (
               <div>
-                <button onClick={()=>setUpdateForm(!updateForm)}>Update Listing Info</button>
+                <button class='text-slate-400' onClick={()=>setUpdateForm(!updateForm)}>Update Listing Info</button>
                 {updateForm && <UpdateListingForm item={item} setAlertMessage={setAlertMessage}/>}
               </div>
             )}

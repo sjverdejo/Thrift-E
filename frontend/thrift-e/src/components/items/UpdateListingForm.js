@@ -57,34 +57,41 @@ const UpdateListingForm = ({item, setAlertMessage}) => {
   }
 
   return (
-    <div>
+    <div class='flex flex-col'>
       <form onSubmit={updateListing}>
-        Listing Name:<input value={name} onChange={({target}) => setName(target.value)} required/>
-        Price: <input value={price} onChange={({target}) => setPrice(target.value)} required/>
-        Clothing Type: 
-        <select 
-          value={clothingType}
-          onChange={({target}) => setClothingType(target.value)}
-          required>
-          <option value='Tanktop'>Tanktop</option>
-          <option value='Shirt'>Shirt</option>
-          <option value='Sweater'>Sweater</option>
-          <option value='Dress'>Dress</option>
-          <option value='Pants'>Pants</option>
-          <option value='Socks'>Socks</option>
-          <option value='Hat'>Hat</option>
-          <option value='Shoes'>Shoes</option>
-          <option value='Jacket'>Jacket</option>
-        </select>
-        <input type='submit' value='Update Item Listing'/>
+        <div class='flex flex-col'>
+          Listing Name:<input class='text-slate-600' value={name} onChange={({target}) => setName(target.value)} required/>
+          Price: <input class='text-slate-600' value={price} onChange={({target}) => setPrice(target.value)} required/>
+          Clothing Type: 
+          <select 
+            class='text-slate-600' 
+            value={clothingType}
+            onChange={({target}) => setClothingType(target.value)}
+            required>
+            <option value='Tanktop'>Tanktop</option>
+            <option value='Shirt'>Shirt</option>
+            <option value='Sweater'>Sweater</option>
+            <option value='Dress'>Dress</option>
+            <option value='Pants'>Pants</option>
+            <option value='Socks'>Socks</option>
+            <option value='Hat'>Hat</option>
+            <option value='Shoes'>Shoes</option>
+            <option value='Jacket'>Jacket</option>
+          </select>
+        </div>
+        <input class='bg-slate-800 text-slate-200 p-2 mt-3 rounded-xl shadow-xl' type='submit' value='Update Item Listing'/>
       </form>
-      <button onClick={()=>setPromptDelete(!promptDelete)}>Delete Listing?</button>
+      <button class='text-slate-400'onClick={()=>setPromptDelete(!promptDelete)}>Delete Listing?</button>
       { promptDelete &&
-        <form onSubmit={deleteItem}>
-          <h3>Type item name to delete permanently</h3>
-          <input value={confirmDelete} onChange={({target}) => setConfirmDelete(target.value)} />
-          <input type='submit' value='Delete Item Permanently' />
-        </form>
+        <div class='flex flex-col items-center'>
+          <form onSubmit={deleteItem}>
+            <h3>Type item name to delete permanently</h3>
+            <div class='flex flex-col'>
+              <input value={confirmDelete} onChange={({target}) => setConfirmDelete(target.value)} />
+              <input class='bg-slate-800 text-slate-200 p-2 mt-3 rounded-xl shadow-xl' type='submit' value='Delete Item Permanently' />
+            </div>
+          </form>
+        </div> 
       }
     </div>
   )
