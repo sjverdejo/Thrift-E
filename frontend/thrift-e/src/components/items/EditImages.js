@@ -10,14 +10,14 @@ const EditImages = ({item, setAlertMessage}) => {
   const [img, setImg] = useState([])
   const [confirmDelete, setConfirmDelete] = useState('')
   const [selectImg, setSelectImg] = useState(null)
+
   const addNewImg = (e) => {
     e.preventDefault()
 
     const formData = new FormData()
-
-    if (!img) {
+    console.log(img)
+    if (img.length === 0) {
       setAlertMessage('No change.')
-      // setShowUpdate(false)
       return
     }
 
@@ -49,7 +49,6 @@ const EditImages = ({item, setAlertMessage}) => {
 
   const selectingImg = (e) => {
     setSelectImg(e.target.src)
-    console.log(selectImg)
   }
 
   const deleteImg = (e) => {
@@ -63,9 +62,7 @@ const EditImages = ({item, setAlertMessage}) => {
           imgToBeDeleted = imageName[imageName.length - 1]
           break
         }
-      }
-
-      console.log(imgToBeDeleted)
+      } 
       
       if (imgToBeDeleted) {
         ItemsAPI.deleteItemImage(item._id, imgToBeDeleted)
@@ -84,23 +81,30 @@ const EditImages = ({item, setAlertMessage}) => {
   }
 
   return (
-    <div>
-      <button onClick={() => {setShowAdd(!showAdd); setShowDelete(false)}}>Add New Image</button>
+    <div class='flex flex-col justify-center items-center'>
+      <div class='flex space-x-32'>
+        <button class='text-slate-900 font-bold' onClick={() => {setShowAdd(!showAdd); setShowDelete(false)}}>Add New Image</button>
+        <button class='text-slate-900 font-bold' onClick={() => {setShowAdd(false); setShowDelete(!showDelete)}}>Delete Image</button>
+      </div>
       { showAdd &&
         <form onSubmit={addNewImg} encType='multipart/form-data'>
-          <input type='file' value={imgName} onChange={handleImg} accepts='image/*'/>
-          <input type='submit' value='Add Image' />
+          <input class='file:bg-slate-800 file:p-2 file:rounded-xl file:shadow-x file:text-slate-200' type='file' value={imgName} onChange={handleImg} accepts='image/*'/>
+          <input class='text-slate-200 bg-slate-800 p-2 rounded-xl shadow-xl'type='submit' value='Add Image' />
         </form>
       }
-      <button onClick={() => {setShowAdd(false); setShowDelete(!showDelete)}}>Delete Image</button>
       { showDelete &&
+      <div class='flex items-center justify-center'>
         <form onSubmit={deleteImg}>
-          {item.itemImages.map(i => <img key={i} src={process.env.REACT_APP_S3 + i} width={50} onClick={selectingImg} alt='img to delete'/>)}
-          
+        <div class='flex flex-col items-center justify-center'>
+          <div class='flex flex-row'>
+            {item.itemImages.map(i => <button class='active:outline'><img key={i} src={process.env.REACT_APP_S3 + i} width={50} onClick={selectingImg} alt='img to delete'/></button>)}
+          </div>
           <h3>Select an image and type delete to delete to remove image permanently.</h3>
           <input value={confirmDelete} onChange={({target})=> setConfirmDelete(target.value)}/>
-          <input type='submit' value='Delete Image' />
+          <input class='m-2 text-slate-200 bg-slate-800 p-2 rounded-xl shadow-xl' type='submit' value='Delete Image' />
+          </div>
         </form>
+      </div>
       }
       <h4>To delete, first select image you would like to remove then click Delete Main Image button.</h4>
     </div>

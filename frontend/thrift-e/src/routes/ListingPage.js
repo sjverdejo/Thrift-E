@@ -50,7 +50,7 @@ const ListingPage = () => {
         }
         <div>
         {!isBuyer && (
-            <div class='flex flex-col items-center justify-center'>
+            <div class='flex flex-col items-center justify-center text-slate-600'>
               <button onClick={()=>setEditImgs(!editImgs)}>Edit Images</button>
               {editImgs && <EditImages item={item} setAlertMessage={setAlertMessage}/>}
             </div>
