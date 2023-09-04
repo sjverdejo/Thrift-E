@@ -63,27 +63,34 @@ const NewListing = () => {
   }
 
   return (
-    <form onSubmit={createItem} encType='multipart/form-data'>
-      Listing Name:<input value={name} onChange={({target}) => setName(target.value)} required/>
-      Price: <input value={price} onChange={({target}) => setPrice(target.value)} required/>
-      Clothing Type: 
-      <select 
-        value={clothingType}
-        onChange={({target}) => setClothingType(target.value)}
-        required>
-        <option value='Tanktop'>Tanktop</option>
-        <option value='Shirt'>Shirt</option>
-        <option value='Sweater'>Sweater</option>
-        <option value='Dress'>Dress</option>
-        <option value='Pants'>Pants</option>
-        <option value='Socks'>Socks</option>
-        <option value='Hat'>Hat</option>
-        <option value='Shoes'>Shoes</option>
-        <option value='Jacket'>Jacket</option>
-      </select>
-      <input type='file' value={imgC} onChange={imageHandler} accept='image/*' multiple/>
-      <input type='submit' value='Post Item Listing'/>
-    </form>
+    <div class='bg-slate-600 p-5 rounded-xl shadow-xl h-96 mb-48'>
+      <form onSubmit={createItem} encType='multipart/form-data'>
+        <div class='flex flex-col text-slate-200'>
+          Listing Name:<input class='rounded-md shadow-md text-slate-800 mb-5' value={name} onChange={({target}) => setName(target.value)} required/>
+          Price: <input class='rounded-md shadow-md text-slate-800 mb-5' value={price} onChange={({target}) => setPrice(target.value)} required/>
+          Clothing Type: 
+          <select 
+            class='rounded-md shadow-md text-slate-800 mb-5'
+            value={clothingType}
+            onChange={({target}) => setClothingType(target.value)}
+            required>
+            <option value='Tanktop'>Tanktop</option>
+            <option value='Shirt'>Shirt</option>
+            <option value='Sweater'>Sweater</option>
+            <option value='Dress'>Dress</option>
+            <option value='Pants'>Pants</option>
+            <option value='Socks'>Socks</option>
+            <option value='Hat'>Hat</option>
+            <option value='Shoes'>Shoes</option>
+            <option value='Jacket'>Jacket</option>
+          </select>
+          <input class='file:rounded-lg mb-12' type='file' value={imgC} onChange={imageHandler} accept='image/*' multiple/>
+        </div>
+        <div class='text-center'>
+          <input class='text-slate-200 bg-slate-800 p-2 rounded-xl shadow-xl'type='submit' value='Post Item Listing'/>
+        </div>
+      </form>
+    </div>
   )
 }
 
