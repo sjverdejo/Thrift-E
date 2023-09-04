@@ -91,7 +91,7 @@ const LoginForm = ({setUser, setAlertMessage}) => {
 
   const rules = () => {
     return (
-      <div class='flex justify-center'>
+      <div class='flex justify-center text-white'>
         <ul class='list-disc'>
           <li>Case-sensitive username and password</li>
           <li>No whitespaces for username or password</li>
@@ -105,8 +105,8 @@ const LoginForm = ({setUser, setAlertMessage}) => {
   }
 
   return (
-    <div class='w-1/2 p-10 border flex flex-col text-white rounded-xl shadow-xl bg-slate-800'>
-      <h1 class='pb-10 text-3xl text-center'>{newUser ? 'Register' : 'Sign in'}</h1>
+    <div class='w-1/2 p-10 border flex flex-col rounded-xl shadow-xl bg-slate-800'>
+      <h1 class='pb-10 text-3xl text-center text-white'>{newUser ? 'Register' : 'Sign in'}</h1>
       <form onSubmit={handleSubmit} encType='multipart/form-data'>
         <div class='flex flex-col items-center space-y-5'>
           <div class='w-3/5'>
@@ -116,12 +116,12 @@ const LoginForm = ({setUser, setAlertMessage}) => {
             <label class='block text-xs text-slate-200'>Password</label> <input className='rounded-md shadow-xl w-full' type='password' value={password} onChange={({target}) => setPassword(target.value)} required/>
           </div>
           { newUser && 
-            <div class='w-full flex flex-col items-center space-y-5 justify-center'>
+            <div class='w-full flex flex-col items-center space-y-5'>
               <div class='w-3/5'>
                 <label class='block text-xs text-slate-200'>Confirm Password: </label> <input class='rounded-md shadow-xl w-full' type='password' value={secondPassword} onChange={({target}) => setSecondPassword(target.value)} required/>
               </div>
-              <div>
-                <label class='block text-xs text-slate-200'>Profile Picture: </label><input class='w-full' type='file' value={profilePicture} onChange={imageChange} accept='image/*'/>
+              <div class='w-3/5'>
+                <label class='block text-xs text-slate-200'>Profile Picture: </label><input class='file:rounded-md text-white ' type='file' value={profilePicture} onChange={imageChange} accept='image/*'/>
               </div>
             </div>
           }

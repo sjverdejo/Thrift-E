@@ -16,6 +16,7 @@ const Logout = ({setUser, setAlertMessage}) => {
   }
 
   return (
+    // <button class='bg-slate-800 hover:bg-slate-500 active:bg-slate-800 text-white p-3 w-1/6' onClick={logOut}>Logout</button>
     <button onClick={logOut}>Logout</button>
   )
 }

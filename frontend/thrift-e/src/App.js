@@ -45,13 +45,16 @@ const App = () => {
   }, [user])
 
   return (
-    <div class='min-h-screen bg-neutral-300 font-mono '>
+    <div class='min-h-screen bg-neutral-300 font-mono antialiased'>
       <Navbar user={user}/>
       {showAlert && <AlertMessage message={message} setMessage={setMessage} setShowAlert={setShowAlert} /> }
-      <div class='pt-5'>
+      <div>
         {!user && <LandingPage setUser={setUser} setAlertMessage={setAlertMessage}/>}
         {user && <Outlet context={{user, setUser, allItems, setItems, setAlertMessage}}/>}
-        {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
+        <div class='text-center'>
+          {user && <Logout setUser={setUser} setAlertMessage={setAlertMessage} />}
+        </div>
+        
       </div>
     </div>
   )
