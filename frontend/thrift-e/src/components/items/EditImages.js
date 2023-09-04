@@ -54,7 +54,6 @@ const EditImages = ({item, setAlertMessage}) => {
 
   const deleteImg = (e) => {
     e.preventDefault()
-    console.log('select', selectImg)
     if (confirmDelete === 'delete') {
       const imageName = selectImg.split('/')
       let imgToBeDeleted = null

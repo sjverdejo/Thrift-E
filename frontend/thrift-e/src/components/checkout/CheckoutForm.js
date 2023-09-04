@@ -74,8 +74,10 @@ const CheckoutForm = () => {
   return (
     <form id='payment-form' onSubmit={submitPayment}>
       <PaymentElement id='payment-element' options={paymentElementOptions} />
-      <button type='submit'>Pay</button>
-      <button onClick={cancelPayment}>Cancel</button>
+      <div class='flex justify-between'>
+        <button class='bg-slate-200 hover:bg-slate-600 active:bg-slate-200 p-3 w-24 rounded-xl shadow-xl text-slate-800 mt-3 ' type='submit'>Pay</button>
+        <button class='text-slate-400' onClick={cancelPayment}>Cancel</button>
+      </div>
     </form>
   )
 }

@@ -27,7 +27,7 @@ const CheckoutPage = () => {
   }, [])
 
   const appearance = {
-    theme: 'stripe',
+    theme: 'night',
   }
 
   const options = {

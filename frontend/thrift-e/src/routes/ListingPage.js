@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams, useOutletContext, Link, Outlet } from 'react-router-dom'
-import Item from '../components/items/Item'
 import UpdateListingForm from '../components/items/UpdateListingForm'
 import EditImages from '../components/items/EditImages'
 import Void from '../assets/void.png'
@@ -16,7 +15,6 @@ const ListingPage = () => {
   const [editImgs, setEditImgs] = useState(false)
 
   useEffect(() => {
-    
     if (item && item.itemImages) {
       setMainImg(`${imgLink}${item.itemImages[0]}`)
     } else {
@@ -26,11 +24,13 @@ const ListingPage = () => {
 
   const imgView = () => {
     return (
-    <div>
-      <img src={mainImg} width={100} alt='main'/>
-      <div>
+    <div class='flex flex-col items-center'>
+      <div class='h-96 w-11/12 flex justify-center'>
+        <img class='h-96 w-94' src={mainImg} alt='main'/>
+      </div>
+      <div class='flex flex-row h-16 w-16'>
         {item.itemImages.map(i => 
-          <img key={i} src={imgLink + i} width={50} onClick={() => setMainImg(`${imgLink}${i}`)} alt='item'/>)}
+          <img key={i} src={imgLink + i} onClick={() => setMainImg(`${imgLink}${i}`)} alt='item'/>)}
       </div>
     </div>
     )
@@ -41,40 +41,49 @@ const ListingPage = () => {
 
 
     return (
-      <div>
-        <Link to='/listings'>Back to listings</Link>
+      <div class='text-slate-200'>
+        <Link class='text-slate-600' to='/listings'>Back to listings</Link>
         {
           item.itemImages.length === 0
-            ? <img src={Void} width={50} alt='none provided'/>
+            ? <div class='flex justify-center'><div class='h-5/6 w-11/12 flex justify-center'><img class='h-96 w-94' src={Void} alt='none provided'/></div></div>
             : imgView()
         }
+        <div>
         {!isBuyer && (
-          <div>
-            <button onClick={()=>setEditImgs(!editImgs)}>Edit Images</button>
-            {editImgs && <EditImages item={item} setAlertMessage={setAlertMessage}/>}
+            <div class='flex flex-col items-center justify-center'>
+              <button onClick={()=>setEditImgs(!editImgs)}>Edit Images</button>
+              {editImgs && <EditImages item={item} setAlertMessage={setAlertMessage}/>}
+            </div>
+          )}
+        <div class='flex justify-center items-center'>
+          <div class='flex flex-col w-3/5 h-full p-5 m-5 bg-slate-600 rounded-xl shadow-xl'>
+            <div class='flex justify-between'>
+              <h1 class='text-3xl'>{item.name}</h1>
+              <h1 class='text-3xl'>${item.price}</h1>
+            </div>
+            <h3>Type: {item.clothingType}</h3>
+            <div class='flex justify-between'>
+              <h4>Posted: {helper.convertDate(item.datePosted)}</h4>
+              <Link class='text-slate-400' to={`/user/${item.seller}`}>Seller Profile</Link>
+            </div>
+            {isBuyer && 
+            ( 
+              <div class='mt-3'>
+                <Link to='./checkout'>
+                  <button class='bg-slate-200 hover:bg-slate-600 active:bg-slate-200 p-3 rounded-lg shadow-xl text-slate-800 mb-3'>Buy Item</button>
+                </Link>
+                <Outlet context={{item, user, setAlertMessage}}/>
+              </div>
+            )}
+            {!isBuyer && (
+              <div>
+                <button onClick={()=>setUpdateForm(!updateForm)}>Update Listing Info</button>
+                {updateForm && <UpdateListingForm item={item} setAlertMessage={setAlertMessage}/>}
+              </div>
+            )}
           </div>
-        )}
-        <Item item={item}/>
-        <h3>Type: {item.clothingType}</h3>
-        <h4>Date Posted {helper.convertDate(item.datePosted)}</h4>
-        <Link to={`/user/${item.seller}`}>Seller</Link>
-        <br/>
-        {isBuyer && 
-        ( 
-          <div>
-            <Link to='./checkout'>
-              <button>Buy Item</button>
-            </Link>
-            <Outlet context={{item, user, setAlertMessage}}/>
-          </div>
-        )}
-        {!isBuyer && (
-          <div>
-            <button onClick={()=>setUpdateForm(!updateForm)}>Update Listing Info</button>
-            {updateForm && <UpdateListingForm item={item} setAlertMessage={setAlertMessage}/>}
-          </div>
-        // )}
-        )}
+        </div>
+        </div>
       </div>
     )
   }
