@@ -42,7 +42,7 @@ const ListingPage = () => {
 
     return (
       <div class='text-slate-200'>
-        <Link class='text-slate-600' to='/listings'>Back to listings</Link>
+        <Link class='text-slate-600 m-5' to='/listings'>Back to listings</Link>
         {
           item.itemImages.length === 0
             ? <div class='flex justify-center'><div class='h-5/6 w-11/12 flex justify-center'><img class='h-96 w-94' src={Void} alt='none provided'/></div></div>
