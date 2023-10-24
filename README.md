@@ -2,7 +2,7 @@
 
 Simple eCommerce full stack application for users to buy and sell used clothing. Created in JavaScript using React, Express, Node, MongoDB, and Tailwind CSS. Uses AWS S3 API for image storage and Stripe API for handling payments. Users can create, view, update, and delete any items they post for sale. 
 
-##Screenshots:
+## Screenshots:
 
 <img width="1655" alt="Screenshot 2023-10-23 at 6 08 04 PM" src="https://github.com/sjverdejo/Thrift-E/assets/43007944/b9859e00-8cab-421b-b17f-4d9fd18e4c0e">
 <img width="1654" alt="Screenshot 2023-10-23 at 6 09 26 PM" src="https://github.com/sjverdejo/Thrift-E/assets/43007944/d57f1a4d-291d-41b3-92ff-8607c00b508d">
